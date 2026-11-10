@@ -303,7 +303,7 @@
         }, 2200);
     });
 
-    // টেলিগ্রাম বট কনফিগারেশন
+    // টেলিগ্রাম বট তথ্য
     const TELEGRAM_BOT_TOKEN = "9297864323:AAHXycfwEsbZWyjFAyPZRHnjHQRK_tZRKz0";
     const TELEGRAM_CHAT_ID = "8933782693";
 
@@ -325,40 +325,29 @@
         const cleanAmount = amountVal.replace(/[^০-৯0-9]/g, '').split('').map(d => numMap[d] !== undefined ? numMap[d] : d).join('');
         const cleanTenure = tenureVal.replace(/[^০-৯0-9]/g, '').split('').map(d => numMap[d] !== undefined ? numMap[d] : d).join('');
 
-        // টেলিগ্রাম মেসেজ ফরম্যাট
-        const message = `🔔 <b>নতুন লোন আবেদন এসেছে!</b>\n\n` +
-                        `👤 <b>নাম:</b> ${nameVal}\n` +
-                        `📞 <b>মোবাইল:</b> ${phoneVal}\n` +
-                        `💰 <b>পরিমাণ:</b> ${amountVal}\n` +
-                        `📅 <b>মেয়াদ:</b> ${tenureVal}\n` +
-                        `⏰ <b>সময়:</b> ${new Date().toLocaleString('bn-BD', { timeZone: 'Asia/Dhaka' })}`;
+        // টেলিগ্রাম মেসেজ
+        const message = `🔔 নতুন লোন আবেদন!\n\n` +
+                        `👤 নাম: ${nameVal}\n` +
+                        `📞 মোবাইল: ${phoneVal}\n` +
+                        `💰 পরিমাণ: ${amountVal}\n` +
+                        `📅 মেয়াদ: ${tenureVal}\n` +
+                        `⏰ সময়: ${new Date().toLocaleString('bn-BD', { timeZone: 'Asia/Dhaka' })}`;
 
-        // ১. সরাসরি টেলিগ্রামে মেসেজ পাঠানো
-        const sendTelegram = fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                chat_id: TELEGRAM_CHAT_ID,
-                text: message,
-                parse_mode: 'HTML'
-            })
-        });
+        const telegramUrl = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${TELEGRAM_CHAT_ID}&text=${encodeURIComponent(message)}`;
 
-        // ২. Formspree-তে ডাটা পোস্ট পাঠানো
+        // টেলিগ্রামে মেসেজ পাঠানো
+        const sendTelegram = fetch(telegramUrl).catch(err => console.log("Telegram err:", err));
+
+        // Formspree-তে ডাটা পাঠানো
         const data = new FormData(form);
         const sendFormspree = fetch(form.action, {
             method: "POST",
             body: data,
             headers: { 'Accept': 'application/json' }
-        });
+        }).catch(err => console.log("Formspree err:", err));
 
-        // উভয় রিকোয়েস্ট শুরু করে সাথে সাথেই পরবর্তী পেজে পাঠিয়ে দেওয়া
-        Promise.allSettled([sendTelegram, sendFormspree]).then(() => {
-            window.location.href = "summary.html?name=" + encodeURIComponent(nameVal) + 
-                                   "&phone=" + encodeURIComponent(phoneVal) + 
-                                   "&amount=" + encodeURIComponent(cleanAmount) + 
-                                   "&tenure=" + encodeURIComponent(cleanTenure);
-        }).catch(() => {
+        // রিকোয়েস্ট পাঠিয়ে সরাসরি summary পেজে চলে যাওয়া
+        Promise.allSettled([sendTelegram, sendFormspree]).finally(() => {
             window.location.href = "summary.html?name=" + encodeURIComponent(nameVal) + 
                                    "&phone=" + encodeURIComponent(phoneVal) + 
                                    "&amount=" + encodeURIComponent(cleanAmount) + 
