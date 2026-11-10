@@ -6,12 +6,58 @@
     <title>অ্যাপ্লিকেশন আইডি যাচাই</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; }
-        body { background: #fff7ed; min-height: 100vh; display: flex; justify-content: center; }
-        .container { width: 100%; max-width: 450px; background: #ffffff; min-height: 100vh; display: flex; flex-direction: column; position: relative; box-shadow: 0 0 25px rgba(255, 106, 0, 0.08); }
-        .header { background: linear-gradient(135deg, #ff5e00, #ff8800); color: #ffffff; padding: 26px 20px 22px; text-align: center; border-bottom-left-radius: 24px; border-bottom-right-radius: 24px; box-shadow: 0 4px 15px rgba(255, 94, 0, 0.2); }
-        .brand-logo-wrap { display: flex; justify-content: center; margin-bottom: 10px; }
-        .company-logo { width: 55px; height: 55px; object-fit: cover; border-radius: 50%; background: #ffffff; padding: 2px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); }
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+            font-family: 'Segoe UI', Roboto, sans-serif; 
+        }
+
+        /* মূল ব্যাকগ্রাউন্ড সম্পূর্ণ সাদা */
+        body { 
+            background: #ffffff; 
+            min-height: 100vh; 
+            display: flex; 
+            justify-content: center; 
+        }
+
+        .container { 
+            width: 100%; 
+            max-width: 450px; 
+            background: #ffffff; 
+            min-height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+            position: relative; 
+            box-shadow: 0 0 25px rgba(255, 94, 0, 0.08); 
+            border-left: 1px solid #fff7ed;
+            border-right: 1px solid #fff7ed;
+        }
+
+        /* কমলা গ্রেডিয়েন্ট হেডার */
+        .header { 
+            background: linear-gradient(135deg, #ff5e00, #ff8800); 
+            color: #ffffff; 
+            padding: 26px 20px 22px; 
+            text-align: center; 
+            border-bottom-left-radius: 24px; 
+            border-bottom-right-radius: 24px; 
+            box-shadow: 0 4px 15px rgba(255, 94, 0, 0.2); 
+        }
+        .brand-logo-wrap { 
+            display: flex; 
+            justify-content: center; 
+            margin-bottom: 10px; 
+        }
+        .company-logo { 
+            width: 55px; 
+            height: 55px; 
+            object-fit: cover; 
+            border-radius: 50%; 
+            background: #ffffff; 
+            padding: 2px; 
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); 
+        }
         .header h2 { font-size: 21px; margin-bottom: 4px; font-weight: 700; }
         .header p { font-size: 13px; opacity: 0.95; }
 
@@ -33,6 +79,7 @@
         .btn-resend { background: none; border: 1.5px dashed #ff5e00; color: #ea580c; padding: 9px 18px; border-radius: 20px; font-size: 13px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 7px; }
         .btn-resend:hover { background: #fff7ed; }
 
+        /* সোশ্যাল-প্রুফ নোটিফিকেশন */
         .loan-popup { position: fixed; bottom: 20px; left: 20px; background: #ffffff; color: #1e293b; padding: 12px 16px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15); display: flex; align-items: center; gap: 12px; z-index: 9999; max-width: 340px; border-left: 5px solid #16a34a; opacity: 0; transform: translateY(30px); transition: all 0.5s ease-in-out; pointer-events: none; }
         .loan-popup.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
         .popup-icon { width: 38px; height: 38px; background: #dcfce7; color: #16a34a; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
@@ -48,7 +95,8 @@
 <div class="container">
     <div class="header">
         <div class="brand-logo-wrap">
-            <img src="logo.png" alt="Company Logo" class="company-logo">
+            <!-- ছোট হাতের এল দিয়ে logoo.png সেট করা হয়েছে -->
+            <img src="logoo.png" alt="Company Logo" class="company-logo">
         </div>
         <h2>অ্যাপ্লিকেশন আইডি যাচাই</h2>
         <p>ফোনে আসা এসএমএস বা অ্যাপ্লিকেশন আইডিটি নিচে দিন</p>
