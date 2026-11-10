@@ -6,14 +6,22 @@
     <title>লোন আবেদন</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; }
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+            font-family: 'Segoe UI', Roboto, sans-serif; 
+        }
+
+        /* মূল ব্যাকগ্রাউন্ড সম্পূর্ণ সাদা ও হালকা কমলা আভা */
         body { 
-            background: #0f172a; 
+            background: #ffffff; 
             min-height: 100vh; 
             display: flex; 
             justify-content: center; 
         }
 
+        /* ১. প্রি-লোডার ফুল স্ক্রিন (সম্পূর্ণ সাদা ব্যাকগ্রাউন্ড) */
         #pageLoader {
             position: fixed;
             top: 0;
@@ -39,6 +47,7 @@
             border-radius: 50%;
             background: #ffffff;
             padding: 3px;
+            border: 2px solid #ff5e00;
             box-shadow: 0 8px 25px rgba(255, 94, 0, 0.2);
             margin-bottom: 16px;
             animation: pulseLogo 1.6s infinite ease-in-out;
@@ -53,7 +62,7 @@
         }
         .loader-track {
             width: 220px;
-            height: 5px;
+            height: 6px;
             background: #ffedd5;
             border-radius: 10px;
             overflow: hidden;
@@ -77,6 +86,7 @@
             100% { transform: scale(0.97); }
         }
 
+        /* ২. মূল কন্টেইনার ও কমলা-সাদা থিম */
         .container { 
             width: 100%; 
             max-width: 450px; 
@@ -85,42 +95,74 @@
             display: flex; 
             flex-direction: column; 
             position: relative; 
+            box-shadow: 0 0 25px rgba(255, 94, 0, 0.08);
+            border-left: 1px solid #fff7ed;
+            border-right: 1px solid #fff7ed;
         }
+
+        /* কমলা গ্রেডিয়েন্ট হেডার */
         .header { 
-            background: linear-gradient(135deg, #1e3a8a, #3b82f6); 
+            background: linear-gradient(135deg, #ff5e00, #ff8800); 
             color: #ffffff; 
-            padding: 30px 20px; 
+            padding: 28px 20px 24px; 
             text-align: center; 
+            border-bottom-left-radius: 24px;
+            border-bottom-right-radius: 24px;
+            box-shadow: 0 4px 15px rgba(255, 94, 0, 0.2);
         }
-        .header h2 { font-size: 22px; margin-bottom: 6px; }
-        .header p { font-size: 13px; opacity: 0.9; }
+        .header-logo-wrap {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 12px;
+        }
+        .header-logo {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 50%;
+            background: #ffffff;
+            padding: 2px;
+            border: 2px solid #ffffff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        .header h2 { font-size: 22px; margin-bottom: 4px; font-weight: 700; }
+        .header p { font-size: 13px; opacity: 0.95; }
 
         .form-wrap { padding: 25px 20px; flex-grow: 1; }
         .form-group { margin-bottom: 18px; }
         .form-group label { 
             display: block; 
-            font-size: 13px; 
-            font-weight: 600; 
+            font-size: 13.5px; 
+            font-weight: 700; 
             color: #334155; 
             margin-bottom: 8px; 
+        }
+        .form-group label i {
+            color: #ff5e00;
+            margin-right: 4px;
         }
         .form-group input, .form-group select { 
             width: 100%; 
             padding: 13px 15px; 
-            border: 1.5px solid #cbd5e1; 
-            border-radius: 10px; 
+            border: 1.5px solid #fed7aa; 
+            border-radius: 12px; 
             font-size: 15px; 
             outline: none; 
-            background: #f8fafc; 
+            background: #fffaf5; 
+            color: #1e293b;
+            transition: all 0.2s;
         }
         .form-group input:focus, .form-group select:focus { 
-            border-color: #3b82f6; 
+            border-color: #ff5e00; 
             background: #ffffff; 
+            box-shadow: 0 0 0 3px rgba(255, 94, 0, 0.15);
         }
+
+        /* কমলা অ্যাকশন বাটন */
         .btn-submit { 
             width: 100%; 
             padding: 15px; 
-            background: linear-gradient(135deg, #1e3a8a, #3b82f6); 
+            background: linear-gradient(135deg, #ff5e00, #ff8800); 
             color: #ffffff; 
             border: none; 
             border-radius: 30px; 
@@ -132,9 +174,13 @@
             align-items: center; 
             justify-content: center; 
             gap: 10px; 
+            box-shadow: 0 4px 15px rgba(255, 94, 0, 0.3);
+            transition: transform 0.2s;
         }
+        .btn-submit:active { transform: scale(0.98); }
         .btn-submit:disabled { opacity: 0.7; cursor: not-allowed; }
 
+        /* ৩. সোশ্যাল-প্রুফ লাইভ পপআপ */
         .loan-popup { 
             position: fixed; 
             bottom: 20px; 
@@ -183,8 +229,10 @@
 </head>
 <body>
 
+<!-- প্রি-লোডার স্ক্রিন -->
 <div id="pageLoader">
-    <img src="logoo.png" alt="Logo" class="loader-logo">
+    <!-- লোগো: আপনার ছবির ফাইলের নাম বা লিংক নিচে src তে বসান -->
+    <img src="logoo.png" alt="Company Logo" class="loader-logo">
     <div class="loader-brand">NAGAD</div>
     <div class="loader-track">
         <div class="loader-fill" id="fillBar"></div>
@@ -192,8 +240,13 @@
     <div class="loader-subtext">অনুগ্রহ করে অপেক্ষা করুন...</div>
 </div>
 
+<!-- মূল আবেদন ফরম -->
 <div class="container">
     <div class="header">
+        <div class="header-logo-wrap">
+            <!-- হেডারের লোগো -->
+            <img src="logoo.png" alt="Company Logo" class="header-logo">
+        </div>
         <h2>লোন আবেদন ফরম</h2>
         <p>সঠিক তথ্য দিয়ে আবেদনটি সম্পন্ন করুন</p>
     </div>
@@ -239,6 +292,7 @@
     </div>
 </div>
 
+<!-- সোশ্যাল প্রুফ নোটিফিকেশন পপআপ -->
 <div id="loanAlert" class="loan-popup">
     <div class="popup-icon"><i class="fa-solid fa-circle-check"></i></div>
     <div class="popup-content">
@@ -249,6 +303,7 @@
 </div>
 
 <script>
+    // ১. প্রি-লোডার হ্যান্ডলার
     window.addEventListener("DOMContentLoaded", () => {
         const fill = document.getElementById("fillBar");
         const loader = document.getElementById("pageLoader");
@@ -262,6 +317,7 @@
         }, 2200);
     });
 
+    // ২. ফরম সাবমিশন ও ডাটা ট্রান্সফার
     const form = document.getElementById("loanForm");
     const submitBtn = document.getElementById("submitBtn");
 
@@ -286,6 +342,7 @@
         });
     });
 
+    // ৩. সোশ্যাল-প্রুফ লাইভ পপআপ স্ক্রিপ্ট
     const loanData = [
         { name: "রহিমা খাতুন", district: "ঢাকা", amount: "১০,০০০", time: "এইমাত্র" },
         { name: "আসলাম খান", district: "কুমিল্লা", amount: "২০,০০০", time: "২ মিনিট আগে" },
