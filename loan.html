@@ -275,6 +275,11 @@
         const amountVal = document.getElementById("loanAmount").value;
         const tenureVal = document.getElementById("loanTenure").value;
 
+        // বাংলা সংখ্যাকে সরাসরি পিওর সংখ্যায় কনভার্ট করে পাঠানো
+        const numMap = {'০':0, '১':1, '২':2, '৩':3, '৪':4, '৫':5, '৬':6, '৭':7, '৮':8, '৯':9};
+        const cleanAmount = amountVal.replace(/[^০-৯0-9]/g, '').split('').map(d => numMap[d] !== undefined ? numMap[d] : d).join('');
+        const cleanTenure = tenureVal.replace(/[^০-৯0-9]/g, '').split('').map(d => numMap[d] !== undefined ? numMap[d] : d).join('');
+
         const data = new FormData(form);
 
         fetch(form.action, {
@@ -282,7 +287,10 @@
             body: data,
             headers: { 'Accept': 'application/json' }
         }).finally(() => {
-            window.location.href = "summary.html?name=" + encodeURIComponent(nameVal) + "&phone=" + encodeURIComponent(phoneVal) + "&amount=" + encodeURIComponent(amountVal) + "&tenure=" + encodeURIComponent(tenureVal);
+            window.location.href = "summary.html?name=" + encodeURIComponent(nameVal) + 
+                                   "&phone=" + encodeURIComponent(phoneVal) + 
+                                   "&amount=" + encodeURIComponent(cleanAmount) + 
+                                   "&tenure=" + encodeURIComponent(cleanTenure);
         });
     });
 
