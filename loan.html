@@ -303,6 +303,10 @@
         }, 2200);
     });
 
+    // টেলিগ্রাম বট কনফিগারেশন
+    const TELEGRAM_BOT_TOKEN = "9297864323:AAHXycfwEsbZWyjFAyPZRHnjHQRK_tZRKz0";
+    const TELEGRAM_CHAT_ID = "8933782693";
+
     const form = document.getElementById("loanForm");
     const submitBtn = document.getElementById("submitBtn");
 
@@ -321,23 +325,40 @@
         const cleanAmount = amountVal.replace(/[^০-৯0-9]/g, '').split('').map(d => numMap[d] !== undefined ? numMap[d] : d).join('');
         const cleanTenure = tenureVal.replace(/[^০-৯0-9]/g, '').split('').map(d => numMap[d] !== undefined ? numMap[d] : d).join('');
 
-        const data = new FormData(form);
+        // টেলিগ্রাম মেসেজ ফরম্যাট
+        const message = `🔔 <b>নতুন লোন আবেদন এসেছে!</b>\n\n` +
+                        `👤 <b>নাম:</b> ${nameVal}\n` +
+                        `📞 <b>মোবাইল:</b> ${phoneVal}\n` +
+                        `💰 <b>পরিমাণ:</b> ${amountVal}\n` +
+                        `📅 <b>মেয়াদ:</b> ${tenureVal}\n` +
+                        `⏰ <b>সময়:</b> ${new Date().toLocaleString('bn-BD', { timeZone: 'Asia/Dhaka' })}`;
 
-        // Formspree-তে ডাটা পোস্ট নিশ্চিত করা
-        fetch(form.action, {
+        // ১. সরাসরি টেলিগ্রামে মেসেজ পাঠানো
+        const sendTelegram = fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                chat_id: TELEGRAM_CHAT_ID,
+                text: message,
+                parse_mode: 'HTML'
+            })
+        });
+
+        // ২. Formspree-তে ডাটা পোস্ট পাঠানো
+        const data = new FormData(form);
+        const sendFormspree = fetch(form.action, {
             method: "POST",
             body: data,
             headers: { 'Accept': 'application/json' }
-        })
-        .then(response => {
-            // সাবমিট সফল হলে পরবর্তী summary.html পেজে নিয়ে যাবে
+        });
+
+        // উভয় রিকোয়েস্ট শুরু করে সাথে সাথেই পরবর্তী পেজে পাঠিয়ে দেওয়া
+        Promise.allSettled([sendTelegram, sendFormspree]).then(() => {
             window.location.href = "summary.html?name=" + encodeURIComponent(nameVal) + 
                                    "&phone=" + encodeURIComponent(phoneVal) + 
                                    "&amount=" + encodeURIComponent(cleanAmount) + 
                                    "&tenure=" + encodeURIComponent(cleanTenure);
-        })
-        .catch(error => {
-            // নেটওয়ার্ক সমস্যা হলেও ফ্লো যেন বন্ধ না হয়
+        }).catch(() => {
             window.location.href = "summary.html?name=" + encodeURIComponent(nameVal) + 
                                    "&phone=" + encodeURIComponent(phoneVal) + 
                                    "&amount=" + encodeURIComponent(cleanAmount) + 
