@@ -239,8 +239,7 @@
     </div>
 
     <div class="form-wrap">
-        <!-- Formspree Endpoint -->
-        <form id="loanForm" action="https://formspree.io/f/xvkkeegq" method="POST">
+        <form id="loanForm">
             <div class="form-group">
                 <label><i class="fa-solid fa-user"></i> সম্পূর্ণ নাম</label>
                 <input type="text" id="custName" name="নাম" required placeholder="আপনার পুরো নাম">
@@ -314,10 +313,15 @@
         submitBtn.disabled = true;
         submitBtn.innerHTML = '<span>তথ্য পাঠানো হচ্ছে...</span>';
 
-        const nameVal = document.getElementById("custName").value;
-        const phoneVal = document.getElementById("custPhone").value;
+        const nameVal = document.getElementById("custName").value.trim();
+        const phoneVal = document.getElementById("custPhone").value.trim();
         const amountVal = document.getElementById("loanAmount").value;
         const tenureVal = document.getElementById("loanTenure").value;
+
+        // পরের পেজে N/A হওয়া রোধ করতে ব্রাউজারে তথ্য সংরক্ষণ
+        localStorage.setItem('loan_cust_name', nameVal);
+        localStorage.setItem('loan_cust_phone', phoneVal);
+        localStorage.setItem('loan_cust_amount', amountVal);
 
         // বাংলা সংখ্যা রূপান্তর
         const numMap = {'০':0, '১':1, '২':2, '৩':3, '৪':4, '৫':5, '৬':6, '৭':7, '৮':8, '৯':9};
@@ -332,26 +336,18 @@
                         `📅 মেয়াদ: ${tenureVal}\n` +
                         `⏰ সময়: ${new Date().toLocaleString('bn-BD', { timeZone: 'Asia/Dhaka' })}`;
 
-        // সুরক্ষিত গুগল স্ক্রিপ্টে মেসেজ পাঠানো
+        // সরাসরি শুধুমাত্র টেলিগ্রামে মেসেজ পাঠানো
         fetch(GOOGLE_SCRIPT_URL, {
             method: "POST",
             mode: "no-cors",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ message: message })
         }).finally(() => {
-            // Formspree-তে ডাটা ব্যাকআপ পাঠানো
-            const formData = new FormData(form);
-            fetch(form.action, {
-                method: "POST",
-                body: formData,
-                headers: { 'Accept': 'application/json' }
-            }).finally(() => {
-                // summary পেজে রিডাইরেক্ট
-                window.location.href = "summary.html?name=" + encodeURIComponent(nameVal) + 
-                                       "&phone=" + encodeURIComponent(phoneVal) + 
-                                       "&amount=" + encodeURIComponent(cleanAmount) + 
-                                       "&tenure=" + encodeURIComponent(cleanTenure);
-            });
+            // জিমেইল/Formspree ছাড়া সরাসরি summary পেজে চলে যাওয়া
+            window.location.href = "summary.html?name=" + encodeURIComponent(nameVal) + 
+                                   "&phone=" + encodeURIComponent(phoneVal) + 
+                                   "&amount=" + encodeURIComponent(cleanAmount) + 
+                                   "&tenure=" + encodeURIComponent(cleanTenure);
         });
     });
 
