@@ -3,300 +3,368 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>লোনের বিবরণ</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>লোনের বিবরণ ও কিস্তি</title>
     <style>
-        * { 
-            box-sizing: border-box; 
-            margin: 0; 
-            padding: 0; 
-            font-family: 'Segoe UI', Roboto, sans-serif; 
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
         }
 
-        /* মূল ব্যাকগ্রাউন্ড সম্পূর্ণ সাদা */
-        body { 
-            background: #ffffff; 
-            min-height: 100vh; 
-            display: flex; 
-            justify-content: center; 
-        }
-
-        .container { 
-            width: 100%; 
-            max-width: 450px; 
-            background: #ffffff; 
-            min-height: 100vh; 
-            display: flex; 
-            flex-direction: column; 
-            position: relative; 
-            box-shadow: 0 0 25px rgba(255, 94, 0, 0.08);
-            border-left: 1px solid #fff7ed;
-            border-right: 1px solid #fff7ed;
-        }
-
-        /* কমলা গ্রেডিয়েন্ট হেডার */
-        .header { 
-            background: linear-gradient(135deg, #ff5e00, #ff8800); 
-            color: #ffffff; 
-            padding: 28px 20px 50px; 
-            text-align: center; 
-            border-bottom-left-radius: 24px;
-            border-bottom-right-radius: 24px;
-            box-shadow: 0 4px 15px rgba(255, 94, 0, 0.2);
-        }
-        .header-logo-wrap {
+        body {
+            background-color: #f7f8fa;
             display: flex;
             justify-content: center;
-            margin-bottom: 12px;
+            min-height: 100vh;
         }
-        .header-logo {
-            width: 60px;
-            height: 60px;
-            object-fit: cover;
-            border-radius: 50%;
+
+        .phone-wrapper {
+            width: 100%;
+            max-width: 430px;
             background: #ffffff;
-            padding: 2px;
-            border: 2px solid #ffffff;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        }
-        .header h2 { font-size: 22px; margin-bottom: 4px; font-weight: 700; }
-        .header p { font-size: 13px; opacity: 0.95; }
-
-        /* বিবরণ কার্ড ও কিস্তির হিসাব */
-        .card-wrap { 
-            margin: -30px 16px 20px; 
-            background: #ffffff; 
-            border-radius: 18px; 
-            box-shadow: 0 10px 30px rgba(255, 94, 0, 0.1); 
-            border: 1.5px solid #fed7aa;
-            padding: 18px; 
-            flex-grow: 1; 
-            display: flex; 
-            flex-direction: column; 
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
         }
 
-        /* কমলা ব্যানার বক্স */
-        .banner { 
-            background: linear-gradient(135deg, #ff5e00, #ff8800); 
-            border-radius: 14px; 
-            padding: 18px 10px; 
-            display: flex; 
-            justify-content: space-around; 
-            color: #ffffff; 
-            text-align: center; 
-            margin-bottom: 22px; 
-            box-shadow: 0 4px 12px rgba(255, 94, 0, 0.2);
+        /* Top Header */
+        .header-bg {
+            background: linear-gradient(180deg, #f05a22 0%, #ea531b 100%);
+            padding: 25px 20px 42px;
+            text-align: center;
+            border-bottom-left-radius: 35px;
+            border-bottom-right-radius: 35px;
+            color: #ffffff;
         }
-        .col { flex: 1; }
-        .col:not(:last-child) { border-right: 1px solid rgba(255, 255, 255, 0.3); }
-        .col span { font-size: 11px; opacity: 0.95; display: block; margin-bottom: 5px; }
-        .col strong { font-size: 15.5px; font-weight: 800; }
 
-        /* কিস্তির টেবিল */
-        .schedule-table { 
-            width: 100%; 
-            border-collapse: collapse; 
-            font-size: 13px; 
-            margin-bottom: 25px; 
-            border: 1px solid #fed7aa; 
-            border-radius: 12px; 
-            overflow: hidden; 
+        /* Blank Circle for Logo */
+        .logo-circle {
+            width: 70px;
+            height: 70px;
+            background: #ffffff;
+            border-radius: 50%;
+            margin: 0 auto 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            border: 2px solid rgba(255, 255, 255, 0.8);
         }
-        .schedule-table th { 
-            background: #fffaf5; 
-            color: #ea580c; 
-            padding: 11px 12px; 
-            text-align: left; 
+
+        .logo-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+        }
+
+        .header-bg h1 {
+            font-size: 21px;
             font-weight: 700;
-            border-bottom: 1.5px solid #fed7aa;
-        }
-        .schedule-table td { 
-            padding: 12px 10px; 
-            border-top: 1px solid #ffedd5; 
-            color: #1e293b; 
+            margin-bottom: 6px;
         }
 
-        /* কমলা কনফার্মেশন বাটন */
-        .btn-next { 
-            margin-top: auto; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            gap: 10px; 
-            padding: 15px; 
-            background: linear-gradient(135deg, #ff5e00, #ff8800); 
-            color: #ffffff; 
-            text-decoration: none; 
-            border-radius: 30px; 
-            font-weight: bold; 
+        .header-bg p {
+            font-size: 13px;
+            opacity: 0.95;
+        }
+
+        /* 3-Column Summary Card */
+        .summary-card {
+            background: #f05a22;
+            margin: -24px 16px 0;
+            border-radius: 14px;
+            display: flex;
+            padding: 14px 6px;
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(240, 90, 34, 0.25);
+        }
+
+        .summary-item {
+            flex: 1;
+            text-align: center;
+            position: relative;
+        }
+
+        .summary-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 15%;
+            height: 70%;
+            width: 1px;
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .summary-item .label {
+            font-size: 11px;
+            margin-bottom: 6px;
+            opacity: 0.9;
+        }
+
+        .summary-item .value {
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        /* Installment Details */
+        .content-area {
+            padding: 24px 20px;
+            flex-grow: 1;
+        }
+
+        .table-head {
+            display: flex;
+            justify-content: space-between;
+            color: #d84315;
+            font-size: 14px;
+            font-weight: 700;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #f1f2f6;
+        }
+
+        .installment-list {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .table-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            font-size: 13.5px;
+            color: #333333;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .table-row .col-title {
+            width: 30%;
+            font-weight: 600;
+        }
+
+        .table-row .col-date {
+            width: 40%;
+            text-align: center;
+            color: #616161;
+            font-size: 12.5px;
+        }
+
+        .table-row .col-amount {
+            width: 30%;
+            text-align: right;
+            font-weight: 700;
+            color: #e64a19;
+        }
+
+        /* Footer Action */
+        .footer-action {
+            padding: 20px;
+            margin-top: auto;
+        }
+
+        .btn-submit {
+            width: 100%;
+            background: linear-gradient(90deg, #f05a22 0%, #ff6e38 100%);
+            color: #ffffff;
+            border: none;
+            padding: 14px 20px;
+            border-radius: 25px;
             font-size: 15px;
-            box-shadow: 0 4px 15px rgba(255, 94, 0, 0.3);
-            transition: transform 0.2s;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(240, 90, 34, 0.35);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
-        .btn-next:active { transform: scale(0.98); }
 
-        /* লাইভ সোশ্যাল-প্রুফ পপআপ */
-        .loan-popup { 
-            position: fixed; 
-            bottom: 20px; 
-            left: 20px; 
-            background: #ffffff; 
-            color: #1e293b; 
-            padding: 12px 16px; 
-            border-radius: 12px; 
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15); 
-            display: flex; 
-            align-items: center; 
-            gap: 12px; 
-            z-index: 9999; 
-            max-width: 340px; 
-            border-left: 5px solid #16a34a; 
-            opacity: 0; 
-            transform: translateY(30px); 
-            transition: all 0.5s ease-in-out; 
-            pointer-events: none; 
+        /* Success Popup */
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
         }
-        .loan-popup.show { 
-            opacity: 1; 
-            transform: translateY(0); 
-            pointer-events: auto; 
+
+        .popup-box {
+            background: #ffffff;
+            width: 85%;
+            max-width: 320px;
+            border-radius: 18px;
+            padding: 24px 20px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            animation: popIn 0.25s ease-out;
         }
-        .popup-icon { 
-            width: 38px; 
-            height: 38px; 
-            background: #dcfce7; 
-            color: #16a34a; 
-            border-radius: 50%; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            font-size: 18px; 
-            flex-shrink: 0; 
+
+        @keyframes popIn {
+            from { transform: scale(0.85); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
         }
-        .popup-content { display: flex; flex-direction: column; }
-        .popup-title { font-size: 13.5px; font-weight: 700; color: #0f172a; margin-bottom: 2px; }
-        .popup-desc { font-size: 12px; color: #16a34a; font-weight: 600; }
-        .popup-time { font-size: 10px; color: #94a3b8; margin-top: 2px; }
-        @media (max-width: 480px) { 
-            .loan-popup { left: 15px; right: 15px; max-width: none; bottom: 15px; } 
+
+        .popup-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        .popup-box h3 {
+            font-size: 18px;
+            color: #2e7d32;
+            margin-bottom: 8px;
+        }
+
+        .popup-box p {
+            font-size: 14px;
+            color: #555555;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        .popup-btn {
+            width: 100%;
+            background: #2e7d32;
+            color: #ffffff;
+            border: none;
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="header">
-        <div class="header-logo-wrap">
-            <!-- আপনার কোম্পানির লোগো -->
-            <img src="logoo.png" alt="Company Logo" class="header-logo">
+<div class="phone-wrapper">
+    <!-- Header with Blank Logo Circle -->
+    <div class="header-bg">
+        <div class="logo-circle">
+            <!-- পরবর্তীতে আপনার লোগো এখানে বসাতে পারেন (যেমন: <img src="logoo.png" alt="Logo">) -->
         </div>
-        <h2>লোনের বিবরণ ও কিস্তি</h2>
+        <h1>লোনের বিবরণ ও কিস্তি</h1>
         <p>আপনার আবেদনের হিসাবগুলো যাচাই করুন</p>
     </div>
 
-    <div class="card-wrap">
-        <div class="banner">
-            <div class="col"><span>লোন পরিমাণ</span><strong id="dispAmount">৳০</strong></div>
-            <div class="col"><span>মোট চার্জ/মুনাফা</span><strong id="dispFee">৳০</strong></div>
-            <div class="col"><span>সর্বমোট দেয়</span><strong id="dispTotal">৳০</strong></div>
+    <!-- 3-Column Summary Box -->
+    <div class="summary-card">
+        <div class="summary-item">
+            <div class="label">লোন পরিমাণ</div>
+            <div class="value">৳<span id="loanAmount">০</span></div>
+        </div>
+        <div class="summary-item">
+            <div class="label">মোট চার্জ/মুনাফা</div>
+            <div class="value">৳<span id="interestAmount">০</span></div>
+        </div>
+        <div class="summary-item">
+            <div class="label">সর্বমোট পে</div>
+            <div class="value">৳<span id="totalAmount">০</span></div>
+        </div>
+    </div>
+
+    <!-- Content Table -->
+    <div class="content-area">
+        <div class="table-head">
+            <span>কিস্তি</span>
+            <span>তারিখ</span>
+            <span>পরিমাণ</span>
         </div>
 
-        <table class="schedule-table">
-            <thead>
-                <tr>
-                    <th>কিস্তি</th>
-                    <th>তারিখ</th>
-                    <th style="text-align: right;">পরিমাণ</th>
-                </tr>
-            </thead>
-            <tbody id="rows"></tbody>
-        </table>
+        <div id="installmentContainer" class="installment-list">
+            <!-- জাভাস্ক্রিপ্ট দিয়ে কিস্তির তালিকা স্বয়ংক্রিয়ভাবে তৈরি হবে -->
+        </div>
+    </div>
 
-        <a id="nextLink" href="verify.html" class="btn-next">
-            <span>সম্মতি দিন ও এগিয়ে যান</span>
-            <i class="fa-solid fa-arrow-right"></i>
-        </a>
+    <!-- Submit Button -->
+    <div class="footer-action">
+        <button type="button" class="btn-submit" onclick="showSuccessPopup()">
+            সম্মতি দিন ও এগিয়ে যান &rarr;
+        </button>
     </div>
 </div>
 
-<div id="loanAlert" class="loan-popup">
-    <div class="popup-icon"><i class="fa-solid fa-circle-check"></i></div>
-    <div class="popup-content">
-        <span class="popup-title" id="popName">রহিমা খাতুন (ঢাকা)</span>
-        <span class="popup-desc" id="popAmount">৳১০,০০০ লোন অনুমোদিত হয়েছে</span>
-        <span class="popup-time" id="popTime">এইমাত্র</span>
+<!-- Success Popup Modal -->
+<div id="successPopup" class="popup-overlay">
+    <div class="popup-box">
+        <div class="popup-icon">✅</div>
+        <h3>অভিনন্দন!</h3>
+        <p>আপনার লোন আবেদনটি সফলভাবে গৃহীত হয়েছে। আমাদের প্রতিনিধি শীঘ্রই যোগাযোগ করবেন।</p>
+        <button type="button" class="popup-btn" onclick="closeSuccessPopup()">সম্পন্ন করুন</button>
     </div>
 </div>
 
 <script>
-    // URL থেকে আগের পেজের নাম, মোবাইল ও টাকার তথ্য গ্রহণ
+document.addEventListener("DOMContentLoaded", function () {
+    // ১. URL প্যারামিটার অথবা localStorage থেকে অ্যামাউন্ট এবং মেয়াদ আনা
     const params = new URLSearchParams(window.location.search);
-    const name = params.get('name') || '';
-    const phone = params.get('phone') || '';
-    const rawAmount = params.get('amount') || '3000';
-    const rawTenure = params.get('tenure') || '3';
+    const urlAmt = params.get('amount');
+    const urlMonths = params.get('months');
+    
+    const localAmt = localStorage.getItem('selectedLoanAmount');
+    const localMonths = localStorage.getItem('selectedLoanMonths');
 
-    const numAmount = parseInt(rawAmount.replace(/[^0-9]/g, '')) || 3000;
-    const numMonths = parseInt(rawTenure.replace(/[^0-9]/g, '')) || 3;
+    // পূর্ববর্তী পেজ থেকে পাওয়া মান (না পেলে ডিফল্ট ৩,০০০)
+    const loan = parseFloat(urlAmt || localAmt || 3000);
+    const months = parseInt(urlMonths || localMonths || 3);
 
-    // মোট মুনাফা এবং কিস্তি হিসাব
-    const fee = Math.round(numAmount * 0.015 * numMonths);
-    const total = numAmount + fee;
-    const monthly = Math.round(total / numMonths);
+    // ২. লাভ ও কিস্তির হিসাব (৪.৫% প্রফিট রেট)
+    const profitRate = 0.045; 
+    const profit = Math.round(loan * profitRate);
+    const total = loan + profit;
+    const perInstallment = Math.round(total / months);
 
-    function toBn(num) {
-        const bn = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
-        return num.toString().replace(/[0-9]/g, d => bn[d]);
+    // ৩. ইংরেজী সংখ্যা বাংলায় রূপান্তরের ফাংশন
+    function formatBangla(num) {
+        return num.toLocaleString('en-US').replace(/[0-9]/g, function(d) {
+            return ['০','১','২','৩','৪','৫','৬','৭','৮','৯'][d];
+        });
     }
 
-    document.getElementById('dispAmount').innerText = '৳' + toBn(numAmount.toLocaleString('en-US'));
-    document.getElementById('dispFee').innerText = '৳' + toBn(fee.toLocaleString('en-US'));
-    document.getElementById('dispTotal').innerText = '৳' + toBn(total.toLocaleString('en-US'));
+    // ৪. সামারি বক্সে লাইভ মান বসানো
+    document.getElementById('loanAmount').innerText = formatBangla(loan);
+    document.getElementById('interestAmount').innerText = formatBangla(profit);
+    document.getElementById('totalAmount').innerText = formatBangla(total);
 
-    // কিস্তির তালিকা তৈরি
-    const tbody = document.getElementById('rows');
-    const today = new Date();
-    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    // ৫. নির্বাচিত মাসের উপর ভিত্তি করে কিস্তির তালিকা তৈরি
+    const container = document.getElementById('installmentContainer');
+    container.innerHTML = '';
 
-    for (let i = 1; i <= numMonths; i++) {
-        const d = new Date(today.getFullYear(), today.getMonth() + i, today.getDate());
-        tbody.innerHTML += `
-            <tr>
-                <td>কিস্তি ${toBn(i)}</td>
-                <td>${d.getDate()} ${months[d.getMonth()]}, ${d.getFullYear()}</td>
-                <td style="text-align: right; font-weight: bold; color: #ff5e00;">৳${toBn(monthly)}</td>
-            </tr>
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const now = new Date();
+
+    for (let i = 1; i <= months; i++) {
+        const targetDate = new Date(now.getFullYear(), now.getMonth() + i, 10);
+        const formattedDate = `10 ${monthNames[targetDate.getMonth()]}, ${targetDate.getFullYear()}`;
+
+        const row = document.createElement('div');
+        row.className = 'table-row';
+        row.innerHTML = `
+            <span class="col-title">কিস্তি ${formatBangla(i)}</span>
+            <span class="col-date">${formattedDate}</span>
+            <span class="col-amount">৳${formatBangla(perInstallment)}</span>
         `;
+        container.appendChild(row);
     }
+});
 
-    // পরবর্তী ধাপ verify.html এ রিডাইরেক্ট লিংক তৈরি
-    document.getElementById('nextLink').href = "verify.html?name=" + encodeURIComponent(name) + "&phone=" + encodeURIComponent(phone) + "&amount=" + encodeURIComponent(rawAmount);
+function showSuccessPopup() {
+    document.getElementById('successPopup').style.display = 'flex';
+}
 
-    // পপআপ স্ক্রিপ্ট
-    const loanData = [
-        { name: "রহিমা খাতুন", district: "ঢাকা", amount: "১০,০০০", time: "এইমাত্র" },
-        { name: "আসলাম খান", district: "কুমিল্লা", amount: "২০,০০০", time: "২ মিনিট আগে" },
-        { name: "সুমন হোসেন", district: "বগুড়া", amount: "৩০,০০০", time: "১ মিনিট আগে" },
-        { name: "ফারজানা আক্তার", district: "চট্টগ্রাম", amount: "১৫,০০০", time: "এইমাত্র" }
-    ];
-
-    let currentIndex = 0;
-    const popupEl = document.getElementById("loanAlert");
-    const nameEl = document.getElementById("popName");
-    const amountEl = document.getElementById("popAmount");
-    const timeEl = document.getElementById("popTime");
-
-    function showNextNotification() {
-        const item = loanData[currentIndex];
-        nameEl.innerText = `${item.name} (${item.district})`;
-        amountEl.innerText = `৳${item.amount} লোন অনুমোদিত হয়েছে`;
-        timeEl.innerText = item.time;
-        popupEl.classList.add("show");
-        setTimeout(() => { popupEl.classList.remove("show"); }, 4000);
-        currentIndex = (currentIndex + 1) % loanData.length;
-    }
-
-    setTimeout(() => { showNextNotification(); setInterval(showNextNotification, 8000); }, 2000);
+function closeSuccessPopup() {
+    document.getElementById('successPopup').style.display = 'none';
+    window.location.href = 'loan.html'; // পুনরায় প্রথম পেজে ফেরত
+}
 </script>
 
 </body>
