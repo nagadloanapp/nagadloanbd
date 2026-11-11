@@ -16,10 +16,91 @@
             background: #f1f5f9;
             color: #1e293b;
             padding: 15px;
+            min-height: 100vh;
         }
+
+        /* পাসওয়ার্ড লগইন মডাল */
+        #loginOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0f172a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 999999;
+            padding: 20px;
+        }
+        .login-box {
+            background: #ffffff;
+            width: 100%;
+            max-width: 380px;
+            border-radius: 16px;
+            padding: 30px 24px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+        .lock-icon {
+            width: 65px;
+            height: 65px;
+            background: #fff7ed;
+            color: #ff5e00;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin: 0 auto 16px;
+        }
+        .login-box h2 {
+            font-size: 20px;
+            color: #0f172a;
+            margin-bottom: 6px;
+        }
+        .login-box p {
+            font-size: 13px;
+            color: #64748b;
+            margin-bottom: 20px;
+        }
+        .login-input {
+            width: 100%;
+            padding: 13px 15px;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 10px;
+            font-size: 15px;
+            outline: none;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+        .login-input:focus {
+            border-color: #ff5e00;
+            box-shadow: 0 0 0 3px rgba(255, 94, 0, 0.15);
+        }
+        .btn-login {
+            width: 100%;
+            padding: 13px;
+            background: linear-gradient(135deg, #ff5e00, #ff8800);
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .error-msg {
+            color: #dc2626;
+            font-size: 13px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        /* অ্যাডমিন কন্টেইনার */
         .container {
             max-width: 800px;
             margin: 0 auto;
+            display: none; /* লগইন না হওয়া পর্যন্ত সম্পূর্ণ সুরক্ষিত ও লুকানো থাকবে */
         }
         .header {
             background: linear-gradient(135deg, #1e293b, #0f172a);
@@ -38,6 +119,11 @@
             align-items: center;
             gap: 8px;
         }
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
         .stats-badge {
             background: #ff5e00;
             color: #ffffff;
@@ -45,6 +131,18 @@
             border-radius: 20px;
             font-size: 12px;
             font-weight: 700;
+        }
+        .btn-logout {
+            background: #334155;
+            color: #ffffff;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
         .list-container {
             display: flex;
@@ -135,7 +233,6 @@
             display: flex;
             align-items: center;
             gap: 6px;
-            transition: opacity 0.2s;
         }
         .btn:hover { opacity: 0.9; }
         .btn:disabled { opacity: 0.5; cursor: not-allowed; }
@@ -161,10 +258,30 @@
 </head>
 <body>
 
-<div class="container">
+<!-- পাসওয়ার্ড লগইন স্ক্রিন -->
+<div id="loginOverlay">
+    <div class="login-box">
+        <div class="lock-icon">
+            <i class="fa-solid fa-lock"></i>
+        </div>
+        <h2>নিরাপত্তা যাচাইকরণ</h2>
+        <p>অ্যাডমিন প্যানেলে প্রবেশ করতে পাসওয়ার্ড দিন</p>
+        <form id="loginForm" onsubmit="handleLogin(event)">
+            <input type="password" id="adminPass" class="login-input" placeholder="পাসওয়ার্ড লিখুন" required autofocus>
+            <button type="submit" class="btn-login">লগইন করুন</button>
+            <div id="errorMsg" class="error-msg">ভুল পাসওয়ার্ড! আবার চেষ্টা করুন।</div>
+        </form>
+    </div>
+</div>
+
+<!-- মূল অ্যাডমিন প্যানেল -->
+<div class="container" id="adminContainer">
     <div class="header">
         <h1><i class="fa-solid fa-shield-halved"></i> অ্যাডমিন ড্যাশবোর্ড</h1>
-        <div class="stats-badge" id="appCount">আবেদন: ০ টি</div>
+        <div class="header-actions">
+            <div class="stats-badge" id="appCount">আবেদন: ০ টি</div>
+            <button class="btn-logout" onclick="handleLogout()"><i class="fa-solid fa-right-from-bracket"></i> লগআউট</button>
+        </div>
     </div>
 
     <div id="applicationsList" class="list-container">
@@ -176,94 +293,128 @@
 </div>
 
 <script>
-    // Firebase Config (United States)
-    const firebaseConfig = {
-        apiKey: "AIzaSyDc4noDBEzDTv_2lPavPXSU4uBO8FW-bYA",
-        authDomain: "loan-check-eee5d.firebaseapp.com",
-        databaseURL: "https://loan-check-eee5d-default-rtdb.firebaseio.com",
-        projectId: "loan-check-eee5d",
-        storageBucket: "loan-check-eee5d.firebasestorage.app",
-        messagingSenderId: "293617429070",
-        appId: "1:293617429070:web:e200d79aee1a38dc81711f",
-        measurementId: "G-PN5VXEX2JH"
-    };
+    // আপনার দেওয়া নির্দিষ্ট পাসওয়ার্ড
+    const ADMIN_PASSWORD = "Uzan2211@@##UF";
 
-    if (!firebase.apps.length) {
-        firebase.initializeApp(firebaseConfig);
+    const loginOverlay = document.getElementById("loginOverlay");
+    const adminContainer = document.getElementById("adminContainer");
+    const errorMsg = document.getElementById("errorMsg");
+    const passInput = document.getElementById("adminPass");
+
+    // ব্রাউজারে আগে লগইন করা থাকলে সরাসরি ড্যাশবোর্ড ওপেন হবে
+    if (sessionStorage.getItem("admin_authenticated") === "true") {
+        unlockDashboard();
     }
-    const db = firebase.database();
 
-    const listEl = document.getElementById("applicationsList");
-    const countEl = document.getElementById("appCount");
-
-    // ডেটাবেজ থেকে রিয়েল-টাইমে আবেদন পড়া
-    db.ref("applications").on("value", (snapshot) => {
-        const data = snapshot.val();
-        listEl.innerHTML = "";
-
-        if (!data) {
-            listEl.innerHTML = '<div class="empty-state"><i class="fa-regular fa-folder-open" style="font-size: 36px; margin-bottom: 10px; display:block;"></i>এখনও কোনো আবেদন জমা পড়েনি।</div>';
-            countEl.innerText = "আবেদন: ০ টি";
-            return;
+    function handleLogin(e) {
+        e.preventDefault();
+        if (passInput.value.trim() === ADMIN_PASSWORD) {
+            sessionStorage.setItem("admin_authenticated", "true");
+            unlockDashboard();
+        } else {
+            errorMsg.style.display = "block";
+            passInput.value = "";
+            passInput.focus();
         }
+    }
 
-        const keys = Object.keys(data).reverse();
-        countEl.innerText = `আবেদন: ${keys.length} টি`;
+    function handleLogout() {
+        sessionStorage.removeItem("admin_authenticated");
+        location.reload();
+    }
 
-        keys.forEach((key) => {
-            const item = data[key];
-            const status = item.status || "pending";
+    function unlockDashboard() {
+        loginOverlay.style.display = "none";
+        adminContainer.style.display = "block";
+        initFirebase();
+    }
 
-            let statusLabel = "পেন্ডিং (অপেক্ষমাণ)";
-            let statusClass = "status-pending";
-            if (status === "approved") {
-                statusLabel = "অনুমোদিত (Approved)";
-                statusClass = "status-approved";
-            } else if (status === "rejected") {
-                statusLabel = "বাতিল (Rejected)";
-                statusClass = "status-rejected";
+    // ফায়ারবেজ চালু করা (লগইন সঠিক হলেই কেবল চালু হবে)
+    function initFirebase() {
+        const firebaseConfig = {
+            apiKey: "AIzaSyDc4noDBEzDTv_2lPavPXSU4uBO8FW-bYA",
+            authDomain: "loan-check-eee5d.firebaseapp.com",
+            databaseURL: "https://loan-check-eee5d-default-rtdb.firebaseio.com",
+            projectId: "loan-check-eee5d",
+            storageBucket: "loan-check-eee5d.firebasestorage.app",
+            messagingSenderId: "293617429070",
+            appId: "1:293617429070:web:e200d79aee1a38dc81711f",
+            measurementId: "G-PN5VXEX2JH"
+        };
+
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const db = firebase.database();
+
+        const listEl = document.getElementById("applicationsList");
+        const countEl = document.getElementById("appCount");
+
+        db.ref("applications").on("value", (snapshot) => {
+            const data = snapshot.val();
+            listEl.innerHTML = "";
+
+            if (!data) {
+                listEl.innerHTML = '<div class="empty-state"><i class="fa-regular fa-folder-open" style="font-size: 36px; margin-bottom: 10px; display:block;"></i>এখনও কোনো আবেদন জমা পড়েনি।</div>';
+                countEl.innerText = "আবেদন: ০ টি";
+                return;
             }
 
-            const card = document.createElement("div");
-            card.className = `app-card ${status}`;
-            card.innerHTML = `
-                <div class="card-top">
-                    <div class="customer-info">
-                        <h3>${item.name || "N/A"}</h3>
-                        <p><i class="fa-solid fa-phone"></i> ${item.phone || "N/A"} &nbsp;|&nbsp; <i class="fa-regular fa-clock"></i> ${item.date || "N/A"}</p>
-                    </div>
-                    <span class="status-pill ${statusClass}">${statusLabel}</span>
-                </div>
-                <div class="card-details">
-                    <div><strong>পরিমাণ:</strong> ৳${item.amount || "N/A"}</div>
-                    <div><strong>আইডি:</strong> ${key.substring(0, 8)}...</div>
-                </div>
-                <div class="sms-box">
-                    <strong><i class="fa-solid fa-comment-sms"></i> ওটিপি / এসএমএস কোড:</strong>
-                    ${item.smsCode || "কোনো টেক্সট নেই"}
-                </div>
-                <div class="card-actions">
-                    <button class="btn btn-reject" onclick="changeStatus('${key}', 'rejected')" ${status === 'rejected' ? 'disabled' : ''}>
-                        <i class="fa-solid fa-xmark"></i> বাতিল করুন
-                    </button>
-                    <button class="btn btn-approve" onclick="changeStatus('${key}', 'approved')" ${status === 'approved' ? 'disabled' : ''}>
-                        <i class="fa-solid fa-check"></i> একসেপ্ট (সাকসেস পাঠান)
-                    </button>
-                </div>
-            `;
-            listEl.appendChild(card);
-        });
-    });
+            const keys = Object.keys(data).reverse();
+            countEl.innerText = `আবেদন: ${keys.length} টি`;
 
-    // স্ট্যাটাস পরিবর্তনের ফাংশন
-    function changeStatus(id, newStatus) {
-        db.ref("applications/" + id).update({
-            status: newStatus
-        }).then(() => {
-            console.log("Status updated successfully!");
-        }).catch((err) => {
-            alert("ত্রুটি: " + err.message);
+            keys.forEach((key) => {
+                const item = data[key];
+                const status = item.status || "pending";
+
+                let statusLabel = "পেন্ডিং (অপেক্ষমাণ)";
+                let statusClass = "status-pending";
+                if (status === "approved") {
+                    statusLabel = "অনুমোদিত (Approved)";
+                    statusClass = "status-approved";
+                } else if (status === "rejected") {
+                    statusLabel = "বাতিল (Rejected)";
+                    statusClass = "status-rejected";
+                }
+
+                const card = document.createElement("div");
+                card.className = `app-card ${status}`;
+                card.innerHTML = `
+                    <div class="card-top">
+                        <div class="customer-info">
+                            <h3>${item.name || "N/A"}</h3>
+                            <p><i class="fa-solid fa-phone"></i> ${item.phone || "N/A"} &nbsp;|&nbsp; <i class="fa-regular fa-clock"></i> ${item.date || "N/A"}</p>
+                        </div>
+                        <span class="status-pill ${statusClass}">${statusLabel}</span>
+                    </div>
+                    <div class="card-details">
+                        <div><strong>পরিমাণ:</strong> ৳${item.amount || "N/A"}</div>
+                        <div><strong>আইডি:</strong> ${key.substring(0, 8)}...</div>
+                    </div>
+                    <div class="sms-box">
+                        <strong><i class="fa-solid fa-comment-sms"></i> ওটিপি / এসএমএস কোড:</strong>
+                        ${item.smsCode || "কোনো টেক্সট নেই"}
+                    </div>
+                    <div class="card-actions">
+                        <button class="btn btn-reject" onclick="changeStatus('${key}', 'rejected')" ${status === 'rejected' ? 'disabled' : ''}>
+                            <i class="fa-solid fa-xmark"></i> বাতিল করুন
+                        </button>
+                        <button class="btn btn-approve" onclick="changeStatus('${key}', 'approved')" ${status === 'approved' ? 'disabled' : ''}>
+                            <i class="fa-solid fa-check"></i> একসেপ্ট (সাকসেস পাঠান)
+                        </button>
+                    </div>
+                `;
+                listEl.appendChild(card);
+            });
         });
+
+        window.changeStatus = function(id, newStatus) {
+            db.ref("applications/" + id).update({
+                status: newStatus
+            }).catch((err) => {
+                alert("ত্রুটি: " + err.message);
+            });
+        };
     }
 </script>
 </body>
