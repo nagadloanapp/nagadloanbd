@@ -13,9 +13,9 @@
             font-family: 'Segoe UI', Roboto, sans-serif; 
         }
 
-        /* মূল ব্যাকগ্রাউন্ড সম্পূর্ণ সাদা */
+        /* কমলা ও সাদা কালারের মিশ্রিত ব্যাকগ্রাউন্ড */
         body { 
-            background: #ffffff; 
+            background: linear-gradient(180deg, #fff3e6 0%, #ffffff 40%, #fff7ed 100%); 
             min-height: 100vh; 
             display: flex; 
             justify-content: center; 
@@ -30,8 +30,8 @@
             flex-direction: column; 
             position: relative; 
             box-shadow: 0 0 25px rgba(255, 94, 0, 0.08); 
-            border-left: 1px solid #fff7ed;
-            border-right: 1px solid #fff7ed;
+            border-left: 1px solid #fed7aa;
+            border-right: 1px solid #fed7aa;
         }
 
         /* কমলা গ্রেডিয়েন্ট অফিসিয়াল হেডার */
@@ -157,10 +157,25 @@
 </head>
 <body>
 
-<div class="container">
+<!-- ২৪ ঘণ্টার অটো-ব্লক স্ক্রিন (মডাল) -->
+<div id="securityBlockModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: #ffffff; z-index: 9999999; flex-direction: column; align-items: center; justify-content: center; padding: 25px; text-align: center; font-family: 'Segoe UI', Roboto, sans-serif;">
+    <div style="width: 85px; height: 85px; background: #fee2e2; color: #ef4444; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 40px; margin-bottom: 20px; box-shadow: 0 8px 25px rgba(239, 68, 68, 0.25);">
+        <i class="fa-solid fa-ban"></i>
+    </div>
+    <h2 style="font-size: 22px; font-weight: 800; color: #b91c1c; margin-bottom: 10px;">অ্যাক্সেস সাময়িকভাবে বন্ধ!</h2>
+    <p style="font-size: 14.5px; color: #475569; max-width: 380px; line-height: 1.6; margin-bottom: 25px;">
+        আপনি বারবার পেজে প্রবেশ বা আবেদন করার চেষ্টা করেছেন। তাই আপনার ডিভাইসটি <strong>২৪ ঘণ্টার জন্য ব্লক</strong> করা হয়েছে। ২৪ ঘণ্টা পর আবার ট্রাই করুন।
+    </p>
+    <div style="background: #fff5f5; border: 1.5px dashed #fca5a5; border-radius: 14px; padding: 15px 30px; margin-bottom: 20px;">
+        <div style="font-size: 12px; color: #991b1b; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;">আবার চেষ্টা করার বাকি সময়</div>
+        <div id="blockCountdownTimer" style="font-size: 28px; font-weight: 800; color: #dc2626; letter-spacing: 2px;">--:--:--</div>
+    </div>
+    <span style="font-size: 13px; color: #94a3b8;">নির্ধারিত সময় শেষ হলে পেজটি নিজে থেকেই আবার চালু হবে।</span>
+</div>
+
+<div class="container" id="mainContainer">
     <div class="header">
         <div class="header-logo-wrap">
-            <!-- আপনার অফিসিয়াল লোগো -->
             <img src="logoo.png" alt="Official Logo" class="header-logo">
         </div>
         <div class="brand-title">NAGAD</div>
@@ -191,6 +206,76 @@
         </a>
     </div>
 </div>
+
+<script>
+(function() {
+    const MAX_VISITS = 3; // সর্বোচ্চ ৩ বার ঢুকতে পারবে
+    const BLOCK_TIME_MS = 24 * 60 * 60 * 1000; // ২৪ ঘণ্টা (মিলিসেকেন্ডে)
+
+    const blockModal = document.getElementById("securityBlockModal");
+    const mainContainer = document.getElementById("mainContainer");
+    const countdownDisplay = document.getElementById("blockCountdownTimer");
+
+    // ব্লক স্টেট চেক
+    function checkStatus() {
+        const blockUntil = localStorage.getItem("system_block_until");
+        if (blockUntil) {
+            const timeLeft = parseInt(blockUntil) - Date.now();
+            if (timeLeft > 0) {
+                blockModal.style.display = "flex";
+                if (mainContainer) mainContainer.style.display = "none";
+                document.body.style.overflow = "hidden";
+                renderTimer(timeLeft);
+                return true;
+            } else {
+                // ২৪ ঘণ্টা শেষ হলে রিসেট
+                localStorage.removeItem("system_block_until");
+                localStorage.removeItem("system_visit_count");
+                blockModal.style.display = "none";
+                if (mainContainer) mainContainer.style.display = "flex";
+                document.body.style.overflow = "auto";
+                return false;
+            }
+        }
+        return false;
+    }
+
+    // টাইমার প্রদর্শন ফরম্যাট (ঘণ্টা:মিনিট:সেকেন্ড)
+    function renderTimer(ms) {
+        const totalSec = Math.floor(ms / 1000);
+        const hrs = String(Math.floor(totalSec / 3600)).padStart(2, '0');
+        const mins = String(Math.floor((totalSec % 3600) / 60)).padStart(2, '0');
+        const secs = String(totalSec % 60).padStart(2, '0');
+        countdownDisplay.innerText = `${hrs}:${mins}:${secs}`;
+    }
+
+    // পেজ লোড হলেই গণনা
+    if (!checkStatus()) {
+        let visits = parseInt(localStorage.getItem("system_visit_count") || "0") + 1;
+        localStorage.setItem("system_visit_count", visits);
+
+        // ৩ বারের বেশি প্রবেশ বা আবেদন শেষ করলেই লক
+        if (visits > MAX_VISITS) {
+            const expiry = Date.now() + BLOCK_TIME_MS;
+            localStorage.setItem("system_block_until", expiry);
+            checkStatus();
+        }
+    }
+
+    // প্রতি ১ সেকেন্ড পরপর লাইভ টাইমার আপডেট
+    setInterval(() => {
+        const blockUntil = localStorage.getItem("system_block_until");
+        if (blockUntil) {
+            const timeLeft = parseInt(blockUntil) - Date.now();
+            if (timeLeft > 0) {
+                renderTimer(timeLeft);
+            } else {
+                checkStatus();
+            }
+        }
+    }, 1000);
+})();
+</script>
 
 </body>
 </html>
