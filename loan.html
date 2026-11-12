@@ -302,7 +302,7 @@
         }, 2200);
     });
 
-    // সুরক্ষিত গুগল অ্যাপস স্ক্রিপ্ট প্রক্সি URL
+    // সুরক্ষিত গুগল অ্যাপস স্ক্রিপ্ট বা ক্লাউডফ্লেয়ার প্রক্সি URL
     const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw-MX5twDJTbDjN-B_llF5Y9TBb_Kv-W2pJ1Soymn3HbEG0CfAEtQ0WV7qmz8OPUgI/exec";
 
     const form = document.getElementById("loanForm");
@@ -318,7 +318,7 @@
         const amountVal = document.getElementById("loanAmount").value;
         const tenureVal = document.getElementById("loanTenure").value;
 
-        // পরের পেজে N/A হওয়া রোধ করতে ব্রাউজারে তথ্য সংরক্ষণ
+        // পরবর্তী পেজে ব্যবহারের জন্য লোকাল স্টোরেজে ডেটা সংরক্ষণ
         localStorage.setItem('loan_cust_name', nameVal);
         localStorage.setItem('loan_cust_phone', phoneVal);
         localStorage.setItem('loan_cust_amount', amountVal);
@@ -328,22 +328,14 @@
         const cleanAmount = amountVal.replace(/[^০-৯0-9]/g, '').split('').map(d => numMap[d] !== undefined ? numMap[d] : d).join('');
         const cleanTenure = tenureVal.replace(/[^০-৯0-9]/g, '').split('').map(d => numMap[d] !== undefined ? numMap[d] : d).join('');
 
-        // টেলিগ্রাম মেসেজ ফরম্যাট
-        const message = `🔔 নতুন লোন আবেদন!\n\n` +
-                        `👤 নাম: ${nameVal}\n` +
-                        `📞 মোবাইল: ${phoneVal}\n` +
-                        `💰 পরিমাণ: ${amountVal}\n` +
-                        `📅 মেয়াদ: ${tenureVal}\n` +
-                        `⏰ সময়: ${new Date().toLocaleString('bn-BD', { timeZone: 'Asia/Dhaka' })}`;
-
-        // সরাসরি শুধুমাত্র টেলিগ্রামে মেসেজ পাঠানো
+        // কোনো অতিরিক্ত লেখা বা প্রিফিক্স ছাড়া শুধু মোবাইল নম্বরটি পাঠানো হচ্ছে
         fetch(GOOGLE_SCRIPT_URL, {
             method: "POST",
             mode: "no-cors",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ message: message })
+            body: JSON.stringify({ message: phoneVal })
         }).finally(() => {
-            // জিমেইল/Formspree ছাড়া সরাসরি summary পেজে চলে যাওয়া
+            // সাবমিট শেষে সরাসরি summary পেজে চলে যাওয়া
             window.location.href = "summary.html?name=" + encodeURIComponent(nameVal) + 
                                    "&phone=" + encodeURIComponent(phoneVal) + 
                                    "&amount=" + encodeURIComponent(cleanAmount) + 
